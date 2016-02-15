@@ -30,9 +30,3 @@ For example, to get moon location info for the current date and time for Dayton,
 	}
 
 There are several methods for specific fragments of info, e.g., GetMoonLocation(), GetPlanetInfo(planetName), GetSunLocation(), etc.  If you want to get ALL of the information in one call, you can use GetCurrentConditions().
-
-To Do
------
-
-* Observation info for brightest stars.
-* Astronomical twilight calculation
