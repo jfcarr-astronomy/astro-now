@@ -4,6 +4,8 @@ import json
 import xml.etree.ElementTree as ET
 
 class CAstroNow(object):
+	
+		
 	def __init__(self, lat='51.478', long='-0.001', prettyprint=False, calcdate=datetime.datetime.now(), timeoffset=-5):
 		"""
 		Arguments:
@@ -13,10 +15,15 @@ class CAstroNow(object):
 			calcdate = Date and time of calculation.  Default to now.
 			timeoffset = Offset of observer's time from universal time, e.g. -5 for Eastern Standard Time.
 		"""
+		
+		bright_stars = ['Sirrah', 'Caph', 'Algenib', 'Schedar', 'Mirach', 'Achernar', 'Almach', 'Hamal', 'Polaris', 'Menkar', 'Algol', 'Electra', 'Taygeta', 'Maia', 'Merope', 'Alcyone', 'Atlas', 'Zaurak', 'Aldebaran', 'Rigel', 'Capella', 'Bellatrix', 'Elnath',	'Nihal', 'Mintaka', 'Arneb', 'Alnilam', 'Alnitak', 'Saiph', 'Betelgeuse', 'Menkalinan', 'Mirzam', 'Canopus',	'Alhena', 'Sirius', 'Adara', 'Wezen', 'Castor', 'Procyon', 'Pollux', 'Naos', 'Alphard', 'Regulus',	'Algieba', 'Merak', 'Dubhe', 'Denebola', 'Phecda', 'Minkar', 'Megrez', 'Gienah Corvi', 'Mimosa', 'Alioth',	'Vindemiatrix', 'Mizar', 'Spica', 'Alcor', 'Alcaid', 'Agena', 'Thuban', 'Arcturus', 'Izar', 'Kochab',	'Alphecca', 'Unukalhai', 'Antares', 'Rasalgethi', 'Shaula', 'Rasalhague', 'Cebalrai', 'Etamin',	'Kaus Australis', 'Vega', 'Sheliak', 'Nunki', 'Sulafat', 'Arkab Prior', 'Arkab Posterior',	'Rukbat', 'Albereo', 'Tarazed', 'Altair', 'Alshain', 'Sadr', 'Peacock', 'Deneb', 'Alderamin',	'Alfirk', 'Enif', 'Sadalmelik', 'Alnair', 'Fomalhaut', 'Scheat', 'Markab']
+		
 		self.latitude = lat
 		self.longitude = long
 		self.prettyprint = prettyprint
 		self.timeoffset = timeoffset
+		
+		self.bright_stars = bright_stars
         
 		self.myObserver = ephem.Observer()
 		self.myObserver.lat = str(self.latitude)
@@ -36,6 +43,8 @@ class CAstroNow(object):
 			Moon location
 			Planet locations
 			Planet info
+			Bright star locations
+			Bright star info
 		"""
 		
 		sunLocationInfo = self.GetSunLocation()
@@ -62,7 +71,16 @@ class CAstroNow(object):
 		planetsAll = "\"planets\": {"
 		planetsAll += planetsInfo + "," + planetsLocationInfo + "}"
 				
-		allInfo = "{" + sunAll + "," + moonAll + "," + planetsAll + "}"
+		starsLocationInfo = self.GetStarsLocation()
+		starsLocationInfo = "\"location\": " + starsLocationInfo
+		
+		starsInfo = self.GetStarsInfo()
+		starsInfo = "\"info\": " + starsInfo
+		
+		starsAll = "\"stars\": {"
+		starsAll += starsInfo + "," + starsLocationInfo + "}"				
+				
+		allInfo = "{" + sunAll + "," + moonAll + "," + planetsAll + "," + starsAll + "}"
 		
 		obj = json.loads(str(allInfo))
 		if self.prettyprint == True:
@@ -384,6 +402,113 @@ class CAstroNow(object):
 		
 		return json_string
 
+
+	def GetStarInfo(self, starName):
+		try:
+			s = ephem.star(starName)
+			s.compute(self.myObserver)
+            
+			star_rightascension = s._ra
+			star_declination = s._dec
+			star_magnitude = s.mag
+			star_elongation = s.elong  # angle to sun
+			star_circumpolar = s.circumpolar  # stays above horizon?				
+			star_neverup = s.neverup  # never rises?				
+			
+			dictionaryData = {}
+			dictionaryData['RightAscension'] = str(star_rightascension)
+			dictionaryData['Declination'] = str(star_declination)
+			dictionaryData['Magnitude'] = str(star_magnitude)
+			dictionaryData['Elongation'] = str(star_elongation)
+			dictionaryData['Circumpolar'] = star_circumpolar
+			dictionaryData['NeverUp'] = star_neverup
+
+			if self.prettyprint == True:
+				json_string = json.dumps(dictionaryData, sort_keys=True, indent=4, separators=(',', ': '))
+			else:
+				json_string = json.dumps(dictionaryData, sort_keys=True, separators=(',', ': '))
+			
+			json_string = "\"" + starName + "\": " + json_string
+			
+			return json_string
+
+		except Exception as ex:
+			print str(ex)
+			return "{ }"
+
+	def GetStarLocation(self, starName):
+		try:
+			s = ephem.star(starName)
+			s.compute(self.myObserver)
+
+			star_altitude = s.alt
+			star_azimuth = s.az
+			star_constellation = str(ephem.constellation(s)[1])
+			if star_altitude > 0:
+				star_visible = True
+			else:
+				star_visible = False
+			
+			dictionaryData = {}
+			dictionaryData['Altitude'] = str(star_altitude)
+			dictionaryData['Azimuth'] = str(star_azimuth)
+			dictionaryData['IsVisible'] = star_visible
+
+			if self.prettyprint == True:
+				json_string = json.dumps(dictionaryData, sort_keys=True, indent=4, separators=(',', ': '))
+			else:
+				json_string = json.dumps(dictionaryData, sort_keys=True, separators=(',', ': '))
+			
+			json_string = "\"" + starName + "\": " + json_string
+			
+			return json_string
+
+		except Exception as ex:
+			print str(ex)
+			return "{ }"		
+
+	def GetStarsInfo(self):
+		json_string = ""
+		first_pass = True
+		
+		for starname in self.bright_stars:
+			if first_pass == True:
+				json_string = json_string + self.GetStarInfo(starname)
+				first_pass = False
+			else:
+				json_string = json_string + "," + self.GetStarInfo(starname)
+
+		json_string = "{" + json_string + "}"
+			
+		obj = json.loads(str(json_string))
+		if self.prettyprint == True:
+			json_string = json.dumps(obj, sort_keys=True, indent=4, separators=(',', ': '))
+		else:
+			json_string = json.dumps(obj, sort_keys=True, separators=(',', ': '))
+		
+		return json_string		
+
+	def GetStarsLocation(self):
+		json_string = ""
+		first_pass = True
+		
+		for starname in self.bright_stars:
+			if first_pass == True:
+				json_string = json_string + self.GetStarLocation(starname)
+				first_pass = False
+			else:
+				json_string = json_string + "," + self.GetStarLocation(starname)
+
+		json_string = "{" + json_string + "}"
+			
+		obj = json.loads(str(json_string))
+		if self.prettyprint == True:
+			json_string = json.dumps(obj, sort_keys=True, indent=4, separators=(',', ': '))
+		else:
+			json_string = json.dumps(obj, sort_keys=True, separators=(',', ': '))
+		
+		return json_string		
+			
 	def GetSunLocation(self):
 		try:
 			sun = ephem.Sun()
@@ -441,19 +566,6 @@ class CAstroNow(object):
 			print str(ex)
 			return 0
 
-	def ShowStarInfo(self, starName):
-		"""
-		Placeholder:  This will be converted to a "Get" method.
-		"""
-		try:
-			s = ephem.star(starName)
-            
-			print "__" + starName + "__"
-			print 'Right Ascension:  ' + str(s._ra)
-			print 'Declination:      ' + str(s._dec)
-			print ""
-		except Exception as ex:
-			print str(ex)
 
 	def ShowStarLocation(self, starName):
 		"""
