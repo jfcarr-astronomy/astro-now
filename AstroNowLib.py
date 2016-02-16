@@ -566,18 +566,3 @@ class CAstroNow(object):
 			print str(ex)
 			return 0
 
-
-	def ShowStarLocation(self, starName):
-		"""
-		Placeholder:  This will be converted to a "Get" method.
-		"""
-		try:
-			s = ephem.star(starName)
-			s.compute(self.myObserver)
-			
-			print "__" + starName + "__"
-			print 'Altitude: ' + str(s.alt)
-			print 'Azimuth:  ' + str(s.az)
-			print ""
-		except Exception as ex:
-			print str(ex)
