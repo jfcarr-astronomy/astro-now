@@ -6,7 +6,7 @@ import xml.etree.ElementTree as ET
 class CAstroNow(object):
 	
 		
-	def __init__(self, lat='51.478', long='-0.001', prettyprint=False, calcdate=datetime.datetime.now(), timeoffset=-5):
+	def __init__(self, lat='51.478', long='-0.001', prettyprint=False, calcdate=datetime.datetime.now(), timeoffset=-5, daylightsavings=False):
 		"""
 		Arguments:
 			lat = Observer's latitude.
@@ -21,7 +21,10 @@ class CAstroNow(object):
 		self.latitude = lat
 		self.longitude = long
 		self.prettyprint = prettyprint
-		self.timeoffset = timeoffset
+		if daylightsavings == True:
+			self.timeoffset = timeoffset + 1
+		else:
+			self.timeoffset = timeoffset
 		
 		self.bright_stars = bright_stars
         
