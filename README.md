@@ -1,7 +1,5 @@
 # astro-now README
 
-**Please Note:** Now hosted on GitLab: https://gitlab.com/jcarr/astro-now
-
 astro-now is a Python library that exports astronomical viewing info in json format, either for the current date and time (default), or a specific date and time that you request.
 
 astro-now depends on the pyephem library, so you'll need to install it first:  <http://rhodesmill.org/pyephem/>
