@@ -14,23 +14,36 @@ def DisplayCurrentConditions():
 	textOutput.delete(1.0, END)
 	textOutput.insert(END, myAstro.GetCurrentConditions())
 
-def DisplayMars():
+def DisplayMoon():
 	textOutput.delete(1.0, END)
-	textOutput.insert(END, myAstro.GetPlanetInfo('Mars'))
+	textOutput.insert(END, "Moon")
 	textOutput.insert(END, "\n")
-	textOutput.insert(END, myAstro.GetPlanetLocation('Mars'))
+	textOutput.insert(END, myAstro.GetMoonLocation())
+	textOutput.insert(END, "\n")
+	textOutput.insert(END, myAstro.GetMoonPhase())
+
+def DisplayPlanet(planetName):
+	textOutput.delete(1.0, END)
+	textOutput.insert(END, myAstro.GetPlanetInfo(planetName))
+	textOutput.insert(END, "\n")
+	textOutput.insert(END, myAstro.GetPlanetLocation(planetName))
 
 
 if __name__ == '__main__':
 	root = Tk()
 	menubar = Menu(root)
+	textOutput = Text(root)
+	
 	menubar.add_command(label="Current Conditions", command=DisplayCurrentConditions)
-	menubar.add_command(label="Mars", command=DisplayMars)
+	menubar.add_command(label="Moon", command=DisplayMoon)
+	menubar.add_command(label="Venus", command= lambda: DisplayPlanet("Venus"))
+	menubar.add_command(label="Mars", command= lambda: DisplayPlanet("Mars"))
+	menubar.add_command(label="Jupiter", command= lambda: DisplayPlanet("Jupiter"))
+	menubar.add_command(label="Saturn", command= lambda: DisplayPlanet("Saturn"))
 	menubar.add_command(label="Exit", command=root.quit)
 	
 	root.config(menu=menubar)
-	
-	textOutput = Text(root)
+
 	textOutput.insert(INSERT, "Ready...")
 	textOutput.pack()
 
