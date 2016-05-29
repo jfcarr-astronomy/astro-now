@@ -25,16 +25,12 @@ if __name__ == '__main__':
 	root = Tk()
 	menubar = Menu(root)
 	filemenu = Menu(menubar, tearoff=0)
-	filemenu.add_command(label="Current Conditions", command=DisplayCurrentConditions)
-	filemenu.add_command(label="Mars", command=DisplayMars)
-
-	filemenu.add_separator()
-
-	filemenu.add_command(label="Exit", command=root.quit)
-	menubar.add_cascade(label="Info", menu=filemenu)
-
+	menubar.add_command(label="Current Conditions", command=DisplayCurrentConditions)
+	menubar.add_command(label="Mars", command=DisplayMars)
+	menubar.add_command(label="Exit", command=root.quit)
+	
 	root.config(menu=menubar)
-
+	
 	textOutput = Text(root)
 	textOutput.insert(INSERT, "Ready...")
 	textOutput.pack()
