@@ -24,7 +24,6 @@ def DisplayMars():
 if __name__ == '__main__':
 	root = Tk()
 	menubar = Menu(root)
-	filemenu = Menu(menubar, tearoff=0)
 	menubar.add_command(label="Current Conditions", command=DisplayCurrentConditions)
 	menubar.add_command(label="Mars", command=DisplayMars)
 	menubar.add_command(label="Exit", command=root.quit)
