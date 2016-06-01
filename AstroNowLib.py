@@ -6,7 +6,7 @@ import xml.etree.ElementTree as ET
 class CAstroNow(object):
 	
 		
-	def __init__(self, lat='51.478', long='-0.001', prettyprint=False, calcdate=datetime.datetime.now(), timeoffset=-5, daylightsavings=False):
+	def __init__(self, lat='51.478', long='-0.001', prettyprint=False, calcdate=datetime.datetime.now()):
 		"""
 		Arguments:
 			lat = Observer's latitude.
@@ -16,28 +16,25 @@ class CAstroNow(object):
 			timeoffset = Offset of observer's time from universal time, e.g. -5 for Eastern Standard Time.
 		"""
 		
-		bright_stars = ['Sirrah', 'Caph', 'Algenib', 'Schedar', 'Mirach', 'Achernar', 'Almach', 'Hamal', 'Polaris', 'Menkar', 'Algol', 'Electra', 'Taygeta', 'Maia', 'Merope', 'Alcyone', 'Atlas', 'Zaurak', 'Aldebaran', 'Rigel', 'Capella', 'Bellatrix', 'Elnath',	'Nihal', 'Mintaka', 'Arneb', 'Alnilam', 'Alnitak', 'Saiph', 'Betelgeuse', 'Menkalinan', 'Mirzam', 'Canopus',	'Alhena', 'Sirius', 'Adara', 'Wezen', 'Castor', 'Procyon', 'Pollux', 'Naos', 'Alphard', 'Regulus',	'Algieba', 'Merak', 'Dubhe', 'Denebola', 'Phecda', 'Minkar', 'Megrez', 'Gienah Corvi', 'Mimosa', 'Alioth',	'Vindemiatrix', 'Mizar', 'Spica', 'Alcor', 'Alcaid', 'Agena', 'Thuban', 'Arcturus', 'Izar', 'Kochab',	'Alphecca', 'Unukalhai', 'Antares', 'Rasalgethi', 'Shaula', 'Rasalhague', 'Cebalrai', 'Etamin',	'Kaus Australis', 'Vega', 'Sheliak', 'Nunki', 'Sulafat', 'Arkab Prior', 'Arkab Posterior',	'Rukbat', 'Albereo', 'Tarazed', 'Altair', 'Alshain', 'Sadr', 'Peacock', 'Deneb', 'Alderamin',	'Alfirk', 'Enif', 'Sadalmelik', 'Alnair', 'Fomalhaut', 'Scheat', 'Markab']
+		bright_stars = ['Sirrah', 'Caph', 'Algenib', 'Schedar', 'Mirach', 'Achernar', 'Almach', 'Hamal', 'Polaris', 'Menkar', 'Algol', 'Electra', 'Taygeta', 'Maia', 'Merope', 'Alcyone', 'Atlas', 'Zaurak', 'Aldebaran', 'Rigel', 'Capella', 'Bellatrix', 'Elnath', 'Nihal', 'Mintaka', 'Arneb', 'Alnilam', 'Alnitak', 'Saiph', 'Betelgeuse', 'Menkalinan', 'Mirzam', 'Canopus', 'Alhena', 'Sirius', 'Adara', 'Wezen', 'Castor', 'Procyon', 'Pollux', 'Naos', 'Alphard', 'Regulus', 'Algieba', 'Merak', 'Dubhe', 'Denebola', 'Phecda', 'Minkar', 'Megrez', 'Gienah Corvi', 'Mimosa', 'Alioth', 'Vindemiatrix', 'Mizar', 'Spica', 'Alcor', 'Alcaid', 'Agena', 'Thuban', 'Arcturus', 'Izar', 'Kochab', 'Alphecca', 'Unukalhai', 'Antares', 'Rasalgethi', 'Shaula', 'Rasalhague', 'Cebalrai', 'Etamin', 'Kaus Australis', 'Vega', 'Sheliak', 'Nunki', 'Sulafat', 'Arkab Prior', 'Arkab Posterior', 'Rukbat', 'Albereo', 'Tarazed', 'Altair', 'Alshain', 'Sadr', 'Peacock', 'Deneb', 'Alderamin', 'Alfirk', 'Enif', 'Sadalmelik', 'Alnair', 'Fomalhaut', 'Scheat', 'Markab']
 		
 		self.latitude = lat
 		self.longitude = long
 		self.prettyprint = prettyprint
-		if daylightsavings == True:
-			self.timeoffset = timeoffset + 1
-		else:
-			self.timeoffset = timeoffset
 		
 		self.bright_stars = bright_stars
-        
+		
 		self.myObserver = ephem.Observer()
 		self.myObserver.lat = str(self.latitude)
 		self.myObserver.lon = str(self.longitude)
+
+		# translate local date/time to universal date/time for the observer
+		current_ut = self.myObserver.date
+		current_local = ephem.localtime(current_ut)
+		current_diff = current_ut - ephem.date(current_local)
+		use_date = ephem.date(ephem.date(calcdate) + ephem.date(current_diff))
 		
-		if self.timeoffset < 0:
-			utDate = ephem.Date(calcdate) + (ephem.hour * abs(self.timeoffset))
-		else:
-			utDate = ephem.Date(calcdate) - (ephem.hour * abs(self.timeoffset))
-		
-		self.myObserver.date = utDate
+		self.myObserver.date = use_date
 
 	def GetCurrentConditions(self):
 		"""
@@ -349,6 +346,7 @@ class CAstroNow(object):
 			dictionaryData['NextSetUT'] = str(planet_set_ut)
 			dictionaryData['NextSetLocal'] = str(planet_set_local)
 			#dictionaryData['NextSetUntil'] = str(set_details)
+			dictionaryData['CalcDateUT'] = str(self.myObserver.date)
 			
 			if self.prettyprint == True:
 				json_string = json.dumps(dictionaryData, sort_keys=True, indent=4, separators=(',', ': '))
