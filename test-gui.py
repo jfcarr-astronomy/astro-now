@@ -14,6 +14,12 @@ def DisplayCurrentConditions():
 	textOutput.delete(1.0, END)
 	textOutput.insert(END, myAstro.GetCurrentConditions())
 
+def DisplaySun():
+	textOutput.delete(1.0, END)
+	textOutput.insert(END, "Sun")
+	textOutput.insert(END, "\n")
+	textOutput.insert(END, myAstro.GetSunLocation())
+
 def DisplayMoon():
 	textOutput.delete(1.0, END)
 	textOutput.insert(END, "Moon")
@@ -35,6 +41,7 @@ if __name__ == '__main__':
 	textOutput = Text(root)
 	
 	menubar.add_command(label="Current Conditions", command=DisplayCurrentConditions)
+	menubar.add_command(label="Sun", command=DisplaySun)
 	menubar.add_command(label="Moon", command=DisplayMoon)
 	menubar.add_command(label="Venus", command= lambda: DisplayPlanet("Venus"))
 	menubar.add_command(label="Mars", command= lambda: DisplayPlanet("Mars"))
