@@ -151,6 +151,7 @@ class CAstroNow(object):
 				next_set_local += " (" + set_details + ")"
 			
 			dictionaryData = {}
+			dictionaryData['Name'] = "Moon"
 			dictionaryData['Altitude'] = str(moon_altitude)
 			dictionaryData['IsVisible'] = moon_visible
 			dictionaryData['Azimuth'] = str(moon_azimuth)
@@ -181,6 +182,7 @@ class CAstroNow(object):
 			moon.compute(self.myObserver)
 
 			dictionaryData = {}
+			dictionaryData['Name'] = "Moon"
 			dictionaryData['Phase'] = str(moon.phase)
 			dictionaryData['NextFirstQuarter'] = str(ephem.next_first_quarter_moon(now))
 			dictionaryData['NextFull'] = str(ephem.next_full_moon(now))
@@ -253,6 +255,7 @@ class CAstroNow(object):
 				print planetName + " is not valid."
 
 			dictionaryData = {}
+			dictionaryData['Name'] = str(planetName)
 			dictionaryData['RightAscension'] = str(planet_rightascension)
 			dictionaryData['Declination'] = str(planet_declination)
 			dictionaryData['Magnitude'] = str(planet_magnitude)
@@ -269,8 +272,6 @@ class CAstroNow(object):
 			else:
 				json_string = json.dumps(dictionaryData, sort_keys=True, separators=(',', ': '))
 				
-			json_string = "\"" + checkName + "\": " + json_string
-			
 			return json_string
 		
 		except Exception as ex:
@@ -332,9 +333,8 @@ class CAstroNow(object):
 			else:
 				print planetName + " is not valid."
                 
-			print ""
-			
 			dictionaryData = {}
+			dictionaryData['Name'] = str(planetName)
 			dictionaryData['Altitude'] = str(planet_altitude)
 			dictionaryData['IsVisible'] = planet_visible
 			dictionaryData['Azimuth'] = str(planet_azimuth)
@@ -352,8 +352,6 @@ class CAstroNow(object):
 			else:
 				json_string = json.dumps(dictionaryData, sort_keys=True, separators=(',', ': '))
 				
-			json_string = "\"" + checkName + "\": " + json_string
-			
 			return json_string
 			
 		except Exception as ex:
@@ -363,6 +361,7 @@ class CAstroNow(object):
 	def GetPlanetsInfo(self):
 		json_string = \
 			"{" + \
+			"\"planets\": [" + \
 			self.GetPlanetInfo("Mercury") + "," + \
 			self.GetPlanetInfo("Venus") + "," + \
 			self.GetPlanetInfo("Mars") + "," + \
@@ -371,6 +370,7 @@ class CAstroNow(object):
 			self.GetPlanetInfo("Uranus") + "," + \
 			self.GetPlanetInfo("Neptune") + "," + \
 			self.GetPlanetInfo("Pluto") + \
+			"]" + \
 			"}"
 		
 		obj = json.loads(str(json_string))
@@ -384,6 +384,7 @@ class CAstroNow(object):
 	def GetPlanetsLocation(self):
 		json_string = \
 			"{" + \
+			"\"planets\": [" + \
 			self.GetPlanetLocation("Mercury") + "," + \
 			self.GetPlanetLocation("Venus") + "," + \
 			self.GetPlanetLocation("Mars") + "," + \
@@ -392,6 +393,7 @@ class CAstroNow(object):
 			self.GetPlanetLocation("Uranus") + "," + \
 			self.GetPlanetLocation("Neptune") + "," + \
 			self.GetPlanetLocation("Pluto") + \
+			"]" + \
 			"}"
 		
 		obj = json.loads(str(json_string))
@@ -416,6 +418,7 @@ class CAstroNow(object):
 			star_neverup = s.neverup  # never rises?				
 			
 			dictionaryData = {}
+			dictionaryData['Name'] = str(starName)
 			dictionaryData['RightAscension'] = str(star_rightascension)
 			dictionaryData['Declination'] = str(star_declination)
 			dictionaryData['Magnitude'] = str(star_magnitude)
@@ -427,8 +430,6 @@ class CAstroNow(object):
 				json_string = json.dumps(dictionaryData, sort_keys=True, indent=4, separators=(',', ': '))
 			else:
 				json_string = json.dumps(dictionaryData, sort_keys=True, separators=(',', ': '))
-			
-			json_string = "\"" + starName + "\": " + json_string
 			
 			return json_string
 
@@ -450,6 +451,7 @@ class CAstroNow(object):
 				star_visible = False
 			
 			dictionaryData = {}
+			dictionaryData['Name'] = str(starName)
 			dictionaryData['Altitude'] = str(star_altitude)
 			dictionaryData['Azimuth'] = str(star_azimuth)
 			dictionaryData['IsVisible'] = star_visible
@@ -458,8 +460,6 @@ class CAstroNow(object):
 				json_string = json.dumps(dictionaryData, sort_keys=True, indent=4, separators=(',', ': '))
 			else:
 				json_string = json.dumps(dictionaryData, sort_keys=True, separators=(',', ': '))
-			
-			json_string = "\"" + starName + "\": " + json_string
 			
 			return json_string
 
@@ -478,7 +478,7 @@ class CAstroNow(object):
 			else:
 				json_string = json_string + "," + self.GetStarInfo(starname)
 
-		json_string = "{" + json_string + "}"
+		json_string = "{" + "\"stars\": [" + json_string + "]" + "}"
 			
 		obj = json.loads(str(json_string))
 		if self.prettyprint == True:
@@ -499,7 +499,7 @@ class CAstroNow(object):
 			else:
 				json_string = json_string + "," + self.GetStarLocation(starname)
 
-		json_string = "{" + json_string + "}"
+		json_string = "{" + "\"stars\": [" + json_string + "]" + "}"
 			
 		obj = json.loads(str(json_string))
 		if self.prettyprint == True:
@@ -529,6 +529,7 @@ class CAstroNow(object):
 			set_time_local = str(ephem.localtime(set_time_ut))
 
 			dictionaryData = {}
+			dictionaryData['Name'] = "Sun"
 			dictionaryData['Altitude'] = str(sun_altitude)
 			dictionaryData['IsVisible'] = sun_visible
 			dictionaryData['Azimuth'] = str(sun_azimuth)
