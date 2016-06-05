@@ -38,47 +38,24 @@ class CAstroNow(object):
 	def GetCurrentConditions(self):
 		"""
 		Full set of current condition information:
-			Moon phase
-			Moon location
-			Planet locations
+			Sun info
+			Moon info
 			Planet info
-			Bright star locations
 			Bright star info
 		"""
 		
-		sunLocationInfo = self.GetSunLocation()
-		sunLocationInfo = "\"location\": " + sunLocationInfo
+		sunAll = self.GetSunInfo()
+		sunAll = "\"sun\": " + sunAll
 		
-		sunAll = "\"sun\": {"
-		sunAll += sunLocationInfo + "}"
+		moonAll = self.GetMoonInfo()
+		moonAll = "\"moon\": " + moonAll
 		
-		moonPhaseInfo = self.GetMoonPhase()
-		moonPhaseInfo = "\"phases\": " + moonPhaseInfo
+		planetsAll = self.GetPlanetsInfo()
+		planetsAll = "\"planets\": " + planetsAll
 		
-		moonLocationInfo = self.GetMoonLocation()
-		moonLocationInfo = "\"location\": " + moonLocationInfo
+		starsAll = self.GetStarsInfo()
+		starsAll = "\"stars\": " + starsAll
 		
-		moonAll = "\"moon\": {"
-		moonAll += moonPhaseInfo + "," + moonLocationInfo + "}"
-		
-		planetsLocationInfo = self.GetPlanetsLocation()
-		planetsLocationInfo = "\"location\": " + planetsLocationInfo
-		
-		planetsInfo = self.GetPlanetsInfo()
-		planetsInfo = "\"info\": " + planetsInfo
-		
-		planetsAll = "\"planets\": {"
-		planetsAll += planetsInfo + "," + planetsLocationInfo + "}"
-				
-		starsLocationInfo = self.GetStarsLocation()
-		starsLocationInfo = "\"location\": " + starsLocationInfo
-		
-		starsInfo = self.GetStarsInfo()
-		starsInfo = "\"info\": " + starsInfo
-		
-		starsAll = "\"stars\": {"
-		starsAll += starsInfo + "," + starsLocationInfo + "}"				
-				
 		allInfo = "{" + sunAll + "," + moonAll + "," + planetsAll + "," + starsAll + "}"
 		
 		obj = json.loads(str(allInfo))
@@ -89,8 +66,10 @@ class CAstroNow(object):
 		
 		return json_string
 
-	def GetMoonLocation(self):
+	def GetMoonInfo(self):
 		try:
+			now = datetime.datetime.now()
+			
 			moon = ephem.Moon()
 			moon.compute(self.myObserver)
 			
@@ -102,8 +81,8 @@ class CAstroNow(object):
 				moon_visible = False
 			else:
 				moon_visible = True
-	    
-	    		rise_time_ut = self.myObserver.next_rising(moon)
+	       		rise_time_ut = self.myObserver.next_rising(moon)
+		
 			rise_time_local = str(ephem.localtime(rise_time_ut))
 			
 			set_time_ut = self.myObserver.next_setting(moon)
@@ -162,6 +141,11 @@ class CAstroNow(object):
 			dictionaryData['NextSetUT'] = str(set_time_ut)
 			dictionaryData['NextSetLocal'] = str(set_time_local)
 			dictionaryData['NextSetUntil'] = str(set_details)
+			dictionaryData['Phase'] = str(moon.phase)
+			dictionaryData['NextFirstQuarter'] = str(ephem.next_first_quarter_moon(now))
+			dictionaryData['NextFull'] = str(ephem.next_full_moon(now))
+			dictionaryData['NextLastQuarter'] = str(ephem.next_last_quarter_moon(now))
+			dictionaryData['NextNew'] = str(ephem.next_new_moon(now))
 			
 			if self.prettyprint == True:
 				json_string = json.dumps(dictionaryData, sort_keys=True, indent=4, separators=(',', ': '))
@@ -173,32 +157,6 @@ class CAstroNow(object):
 		except Exception as ex:
 			print str(ex)
 			return ""
-
-	def GetMoonPhase(self):
-		try:
-			now = datetime.datetime.now()
-
-			moon = ephem.Moon()
-			moon.compute(self.myObserver)
-
-			dictionaryData = {}
-			dictionaryData['Name'] = "Moon"
-			dictionaryData['Phase'] = str(moon.phase)
-			dictionaryData['NextFirstQuarter'] = str(ephem.next_first_quarter_moon(now))
-			dictionaryData['NextFull'] = str(ephem.next_full_moon(now))
-			dictionaryData['NextLastQuarter'] = str(ephem.next_last_quarter_moon(now))
-			dictionaryData['NextNew'] = str(ephem.next_new_moon(now))
-
-			if self.prettyprint == True:
-				json_string = json.dumps(dictionaryData, sort_keys=True, indent=4, separators=(',', ': '))
-			else:
-				json_string = json.dumps(dictionaryData, sort_keys=True, separators=(',', ': '))
-				
-			return json_string
-				
-		except Exception as ex:
-			print str(ex)
-			return ""			
 
 	def GetPlanetInfo(self, planetName):
 		try:
@@ -251,6 +209,18 @@ class CAstroNow(object):
 				planet_sundistance = p.sun_distance  # distance to sun
 				planet_earthdistance = p.earth_distance  # distance to earth
 				planet_phase = p.phase  # % illuminated
+
+				planet_altitude = p.alt
+				planet_azimuth = p.az
+				planet_constellation = str(ephem.constellation(p)[1])
+				planet_rise_ut = self.myObserver.next_rising(p)
+				planet_set_ut = self.myObserver.next_setting(p)
+				planet_rise_local = ephem.localtime(planet_rise_ut)
+				planet_set_local = ephem.localtime(planet_set_ut)
+				if planet_altitude > 0:
+					planet_visible = True
+				else:
+					planet_visible = False				
 			else:
 				print planetName + " is not valid."
 
@@ -266,75 +236,6 @@ class CAstroNow(object):
 			dictionaryData['SunDistance'] = str(planet_sundistance)
 			dictionaryData['EarthDistance'] = str(planet_earthdistance)
 			dictionaryData['Phase'] = str(planet_phase)
-			
-			if self.prettyprint == True:
-				json_string = json.dumps(dictionaryData, sort_keys=True, indent=4, separators=(',', ': '))
-			else:
-				json_string = json.dumps(dictionaryData, sort_keys=True, separators=(',', ': '))
-				
-			return json_string
-		
-		except Exception as ex:
-			print str(ex)
-			print ""		
-
-	def GetPlanetLocation(self, planetName):
-		try:
-			IsReady = False
-            
-			checkName = planetName.lower()
-            
-			if checkName == 'mercury':
-				p = ephem.Mercury()
-				IsReady = True
-    
-			if checkName == 'venus':
-				p = ephem.Venus()
-				IsReady = True
-            
-			if checkName == 'mars':
-				p = ephem.Mars()
-				IsReady = True
-    
-			if checkName == 'jupiter':
-				p = ephem.Jupiter()
-				IsReady = True
-    
-			if checkName == 'saturn':
-				p = ephem.Saturn()
-				IsReady = True
-    
-			if checkName == 'uranus':
-				p = ephem.Uranus()
-				IsReady = True
-    
-			if checkName == 'neptune':
-				p = ephem.Neptune()
-				IsReady = True
-                
-			if checkName == 'pluto':
-				p = ephem.Pluto()
-				IsReady = True
-                
-			if IsReady == True:
-				p.compute(self.myObserver)
-				
-				planet_altitude = p.alt
-				planet_azimuth = p.az
-				planet_constellation = str(ephem.constellation(p)[1])
-				planet_rise_ut = self.myObserver.next_rising(p)
-				planet_set_ut = self.myObserver.next_setting(p)
-				planet_rise_local = ephem.localtime(planet_rise_ut)
-				planet_set_local = ephem.localtime(planet_set_ut)
-				if planet_altitude > 0:
-					planet_visible = True
-				else:
-					planet_visible = False
-			else:
-				print planetName + " is not valid."
-                
-			dictionaryData = {}
-			dictionaryData['Name'] = str(planetName)
 			dictionaryData['Altitude'] = str(planet_altitude)
 			dictionaryData['IsVisible'] = planet_visible
 			dictionaryData['Azimuth'] = str(planet_azimuth)
@@ -353,10 +254,10 @@ class CAstroNow(object):
 				json_string = json.dumps(dictionaryData, sort_keys=True, separators=(',', ': '))
 				
 			return json_string
-			
+		
 		except Exception as ex:
 			print str(ex)
-			print ""
+			print ""		
 
 	def GetPlanetsInfo(self):
 		json_string = \
@@ -381,30 +282,6 @@ class CAstroNow(object):
 		
 		return json_string		
 
-	def GetPlanetsLocation(self):
-		json_string = \
-			"{" + \
-			"\"planets\": [" + \
-			self.GetPlanetLocation("Mercury") + "," + \
-			self.GetPlanetLocation("Venus") + "," + \
-			self.GetPlanetLocation("Mars") + "," + \
-			self.GetPlanetLocation("Jupiter") + "," + \
-			self.GetPlanetLocation("Saturn") + "," + \
-			self.GetPlanetLocation("Uranus") + "," + \
-			self.GetPlanetLocation("Neptune") + "," + \
-			self.GetPlanetLocation("Pluto") + \
-			"]" + \
-			"}"
-		
-		obj = json.loads(str(json_string))
-		if self.prettyprint == True:
-			json_string = json.dumps(obj, sort_keys=True, indent=4, separators=(',', ': '))
-		else:
-			json_string = json.dumps(obj, sort_keys=True, separators=(',', ': '))
-		
-		return json_string
-
-
 	def GetStarInfo(self, starName):
 		try:
 			s = ephem.star(starName)
@@ -416,32 +293,6 @@ class CAstroNow(object):
 			star_elongation = s.elong  # angle to sun
 			star_circumpolar = s.circumpolar  # stays above horizon?				
 			star_neverup = s.neverup  # never rises?				
-			
-			dictionaryData = {}
-			dictionaryData['Name'] = str(starName)
-			dictionaryData['RightAscension'] = str(star_rightascension)
-			dictionaryData['Declination'] = str(star_declination)
-			dictionaryData['Magnitude'] = str(star_magnitude)
-			dictionaryData['Elongation'] = str(star_elongation)
-			dictionaryData['Circumpolar'] = star_circumpolar
-			dictionaryData['NeverUp'] = star_neverup
-
-			if self.prettyprint == True:
-				json_string = json.dumps(dictionaryData, sort_keys=True, indent=4, separators=(',', ': '))
-			else:
-				json_string = json.dumps(dictionaryData, sort_keys=True, separators=(',', ': '))
-			
-			return json_string
-
-		except Exception as ex:
-			print str(ex)
-			return "{ }"
-
-	def GetStarLocation(self, starName):
-		try:
-			s = ephem.star(starName)
-			s.compute(self.myObserver)
-
 			star_altitude = s.alt
 			star_azimuth = s.az
 			star_constellation = str(ephem.constellation(s)[1])
@@ -452,6 +303,12 @@ class CAstroNow(object):
 			
 			dictionaryData = {}
 			dictionaryData['Name'] = str(starName)
+			dictionaryData['RightAscension'] = str(star_rightascension)
+			dictionaryData['Declination'] = str(star_declination)
+			dictionaryData['Magnitude'] = str(star_magnitude)
+			dictionaryData['Elongation'] = str(star_elongation)
+			dictionaryData['Circumpolar'] = star_circumpolar
+			dictionaryData['NeverUp'] = star_neverup
 			dictionaryData['Altitude'] = str(star_altitude)
 			dictionaryData['Azimuth'] = str(star_azimuth)
 			dictionaryData['IsVisible'] = star_visible
@@ -465,7 +322,7 @@ class CAstroNow(object):
 
 		except Exception as ex:
 			print str(ex)
-			return "{ }"		
+			return "{ }"
 
 	def GetStarsInfo(self):
 		json_string = ""
@@ -488,28 +345,7 @@ class CAstroNow(object):
 		
 		return json_string		
 
-	def GetStarsLocation(self):
-		json_string = ""
-		first_pass = True
-		
-		for starname in self.bright_stars:
-			if first_pass == True:
-				json_string = json_string + self.GetStarLocation(starname)
-				first_pass = False
-			else:
-				json_string = json_string + "," + self.GetStarLocation(starname)
-
-		json_string = "{" + "\"stars\": [" + json_string + "]" + "}"
-			
-		obj = json.loads(str(json_string))
-		if self.prettyprint == True:
-			json_string = json.dumps(obj, sort_keys=True, indent=4, separators=(',', ': '))
-		else:
-			json_string = json.dumps(obj, sort_keys=True, separators=(',', ': '))
-		
-		return json_string		
-			
-	def GetSunLocation(self):
+	def GetSunInfo(self):
 		try:
 			sun = ephem.Sun()
 			sun.compute(self.myObserver)
