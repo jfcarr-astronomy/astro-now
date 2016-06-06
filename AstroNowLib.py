@@ -50,11 +50,9 @@ class CAstroNow(object):
 		moonAll = self.GetMoonInfo()
 		moonAll = "\"moon\": " + moonAll
 		
-		planetsAll = self.GetPlanetsInfo()
-		planetsAll = "\"planets\": " + planetsAll
+		planetsAll = self.GetPlanetsInfo(embedded=True)
 		
-		starsAll = self.GetStarsInfo()
-		starsAll = "\"stars\": " + starsAll
+		starsAll = self.GetStarsInfo(embedded=True)
 		
 		allInfo = "{" + sunAll + "," + moonAll + "," + planetsAll + "," + starsAll + "}"
 		
@@ -259,9 +257,8 @@ class CAstroNow(object):
 			print str(ex)
 			print ""		
 
-	def GetPlanetsInfo(self):
+	def GetPlanetsInfo(self, embedded=False):
 		json_string = \
-			"{" + \
 			"\"planets\": [" + \
 			self.GetPlanetInfo("Mercury") + "," + \
 			self.GetPlanetInfo("Venus") + "," + \
@@ -271,14 +268,19 @@ class CAstroNow(object):
 			self.GetPlanetInfo("Uranus") + "," + \
 			self.GetPlanetInfo("Neptune") + "," + \
 			self.GetPlanetInfo("Pluto") + \
-			"]" + \
-			"}"
+			"]"
 		
-		obj = json.loads(str(json_string))
-		if self.prettyprint == True:
-			json_string = json.dumps(obj, sort_keys=True, indent=4, separators=(',', ': '))
-		else:
-			json_string = json.dumps(obj, sort_keys=True, separators=(',', ': '))
+		if embedded == False:
+			json_string = \
+				"{" + \
+				json_string + \
+				"}"
+		
+			obj = json.loads(str(json_string))
+			if self.prettyprint == True:
+				json_string = json.dumps(obj, sort_keys=True, indent=4, separators=(',', ': '))
+			else:
+				json_string = json.dumps(obj, sort_keys=True, separators=(',', ': '))
 		
 		return json_string		
 
@@ -324,7 +326,7 @@ class CAstroNow(object):
 			print str(ex)
 			return "{ }"
 
-	def GetStarsInfo(self):
+	def GetStarsInfo(self, embedded=False):
 		json_string = ""
 		first_pass = True
 		
@@ -335,13 +337,16 @@ class CAstroNow(object):
 			else:
 				json_string = json_string + "," + self.GetStarInfo(starname)
 
-		json_string = "{" + "\"stars\": [" + json_string + "]" + "}"
+		json_string = "\"stars\": [" + json_string + "]"
+
+		if embedded == False:
+			json_string = "{" + json_string + "}"
 			
-		obj = json.loads(str(json_string))
-		if self.prettyprint == True:
-			json_string = json.dumps(obj, sort_keys=True, indent=4, separators=(',', ': '))
-		else:
-			json_string = json.dumps(obj, sort_keys=True, separators=(',', ': '))
+			obj = json.loads(str(json_string))
+			if self.prettyprint == True:
+				json_string = json.dumps(obj, sort_keys=True, indent=4, separators=(',', ': '))
+			else:
+				json_string = json.dumps(obj, sort_keys=True, separators=(',', ': '))
 		
 		return json_string		
 
