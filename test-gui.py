@@ -18,21 +18,17 @@ def DisplaySun():
 	textOutput.delete(1.0, END)
 	textOutput.insert(END, "Sun")
 	textOutput.insert(END, "\n")
-	textOutput.insert(END, myAstro.GetSunLocation())
+	textOutput.insert(END, myAstro.GetSunInfo())
 
 def DisplayMoon():
 	textOutput.delete(1.0, END)
 	textOutput.insert(END, "Moon")
 	textOutput.insert(END, "\n")
-	textOutput.insert(END, myAstro.GetMoonLocation())
-	textOutput.insert(END, "\n")
-	textOutput.insert(END, myAstro.GetMoonPhase())
+	textOutput.insert(END, myAstro.GetMoonInfo())
 
 def DisplayPlanet(planetName):
 	textOutput.delete(1.0, END)
 	textOutput.insert(END, myAstro.GetPlanetInfo(planetName))
-	textOutput.insert(END, "\n")
-	textOutput.insert(END, myAstro.GetPlanetLocation(planetName))
 
 
 if __name__ == '__main__':
