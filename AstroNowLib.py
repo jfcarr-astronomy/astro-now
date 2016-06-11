@@ -79,8 +79,8 @@ class CAstroNow(object):
 				moon_visible = False
 			else:
 				moon_visible = True
-	       		rise_time_ut = self.myObserver.next_rising(moon)
-		
+
+			rise_time_ut = self.myObserver.next_rising(moon)
 			rise_time_local = str(ephem.localtime(rise_time_ut))
 			
 			set_time_ut = self.myObserver.next_setting(moon)
