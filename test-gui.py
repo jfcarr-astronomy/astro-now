@@ -1,14 +1,14 @@
 #!/usr/bin/python
 
-import AstroNowLib
+import astro_now_lib as AL
 from Tkinter import *
 
 # Dayton, Ohio
 testLatitude = '39.759'
 testLongitude = '-84.192'
 
-myAstro = AstroNowLib.CAstroNow(lat=testLatitude, long=testLongitude, prettyprint=True)
-#myAstro = AstroLib.CAstro(lat=testLatitude, long=testLongitude, prettyprint=True, calcdate="2016/01/17 20:00:00")
+myAstro = AL.CAstroNow(lat=testLatitude, long=testLongitude, prettyprint=True)
+#myAstro = AL.CAstro(lat=testLatitude, long=testLongitude, prettyprint=True, calcdate="2016/01/17 20:00:00")
 
 def DisplayCurrentConditions():
 	textOutput.delete(1.0, END)
