@@ -35,6 +35,50 @@ class CAstroNow(object):
 		
 		self.myObserver.date = use_date
 
+	def ConvertAzimuthToCompassDirection(self, azimuth):
+		"""
+		Compass is divided into 16 segments, mapped to
+		 N, NNE, NE, NEE, E, SEE, SE, SSE, S, SSW, SW, SWW, W, NWW, NW, and NNW.
+		"""
+		compassDirection = ""
+
+		if azimuth >= 0 and azimuth <= 0.1963350785:
+			compassDirection = "North"
+		if azimuth > 0.1963350785 and azimuth <= 0.5890052356:
+			compassDirection = "North-NorthEast"
+		if azimuth > 0.5890052356 and azimuth <= 0.9816753927:
+			compassDirection = "NorthEast"
+		if azimuth > 0.9816753927 and azimuth <= 1.37434555:
+			compassDirection = "NorthEast-East"
+		if azimuth > 1.37434555 and azimuth <= 1.767015707:
+			compassDirection = "East"
+		if azimuth > 1.767015707 and azimuth <= 2.159685864:
+			compassDirection = "SouthEast-East"
+		if azimuth > 2.159685864 and azimuth <= 2.552356021:
+			compassDirection = "SouthEast"
+		if azimuth > 2.552356021 and azimuth <= 2.945026178:
+			compassDirection = "South-SouthEast"
+		if azimuth > 2.945026178 and azimuth <= 3.337696335:
+			compassDirection = "South"
+		if azimuth > 3.337696335 and azimuth <= 3.730366492:
+			compassDirection = "South-SouthWest"
+		if azimuth > 3.730366492 and azimuth <= 4.123036649:
+			compassDirection = "SouthWest"
+		if azimuth > 4.123036649 and azimuth <= 4.515706806:
+			compassDirection = "SouthWest-West"
+		if azimuth > 4.515706806 and azimuth <= 4.908376963:
+			compassDirection = "West"
+		if azimuth > 4.908376963 and azimuth <= 5.30104712:
+			compassDirection = "NorthWest-West"
+		if azimuth > 5.30104712 and azimuth <= 5.693717277:
+			compassDirection = "NorthWest"
+		if azimuth > 5.693717277 and azimuth <= 6.086387435:
+			compassDirection = "North-NorthWest"
+		if azimuth >= 6.086387435:
+			compassDirection = "North"
+
+		return compassDirection
+
 	def GetCurrentConditions(self):
 		"""
 		Full set of current condition information:
@@ -73,6 +117,7 @@ class CAstroNow(object):
 			
 			moon_altitude = moon.alt
 			moon_azimuth = moon.az
+			moon_compass = self.ConvertAzimuthToCompassDirection(moon_azimuth)
 			moon_constellation = ephem.constellation(moon)[1]
 	    
 			if moon_altitude <= 0:
@@ -132,6 +177,7 @@ class CAstroNow(object):
 			dictionaryData['Altitude'] = str(moon_altitude)
 			dictionaryData['IsVisible'] = moon_visible
 			dictionaryData['Azimuth'] = str(moon_azimuth)
+			dictionaryData['Compass'] = str(moon_compass)
 			dictionaryData['InConstellation'] = moon_constellation
 			dictionaryData['NextRiseUT'] = str(rise_time_ut)
 			dictionaryData['NextRiseLocal'] = str(rise_time_local)
@@ -210,6 +256,7 @@ class CAstroNow(object):
 
 				planet_altitude = p.alt
 				planet_azimuth = p.az
+				planet_compass = self.ConvertAzimuthToCompassDirection(planet_azimuth)
 				planet_constellation = str(ephem.constellation(p)[1])
 				planet_rise_ut = self.myObserver.next_rising(p)
 				planet_set_ut = self.myObserver.next_setting(p)
@@ -237,6 +284,7 @@ class CAstroNow(object):
 			dictionaryData['Altitude'] = str(planet_altitude)
 			dictionaryData['IsVisible'] = planet_visible
 			dictionaryData['Azimuth'] = str(planet_azimuth)
+			dictionaryData['Compass'] = str(planet_compass)
 			dictionaryData['InConstellation'] = str(planet_constellation)
 			dictionaryData['NextRiseUT'] = str(planet_rise_ut)
 			dictionaryData['NextRiseLocal'] = str(planet_rise_local)
@@ -297,6 +345,7 @@ class CAstroNow(object):
 			star_neverup = s.neverup  # never rises?				
 			star_altitude = s.alt
 			star_azimuth = s.az
+			star_compass = self.ConvertAzimuthToCompassDirection(star_azimuth)
 			star_constellation = str(ephem.constellation(s)[1])
 			if star_altitude > 0:
 				star_visible = True
@@ -313,6 +362,7 @@ class CAstroNow(object):
 			dictionaryData['NeverUp'] = star_neverup
 			dictionaryData['Altitude'] = str(star_altitude)
 			dictionaryData['Azimuth'] = str(star_azimuth)
+			dictionaryData['Compass'] = str(star_compass)
 			dictionaryData['IsVisible'] = star_visible
 
 			if self.prettyprint == True:
@@ -361,6 +411,7 @@ class CAstroNow(object):
 			else:
 				sun_visible = False
 			sun_azimuth = sun.az
+			sun_compass = self.ConvertAzimuthToCompassDirection(sun_azimuth)
 			sun_constellation = ephem.constellation(sun)[1]
 
 	    		rise_time_ut = self.myObserver.next_rising(sun)
@@ -374,6 +425,7 @@ class CAstroNow(object):
 			dictionaryData['Altitude'] = str(sun_altitude)
 			dictionaryData['IsVisible'] = sun_visible
 			dictionaryData['Azimuth'] = str(sun_azimuth)
+			dictionaryData['Compass'] = str(sun_compass)
 			dictionaryData['InConstellation'] = str(sun_constellation)
 			dictionaryData['NextRiseUT'] = str(rise_time_ut)
 			dictionaryData['NextRiseLocal'] = str(rise_time_local)
