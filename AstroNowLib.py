@@ -119,11 +119,8 @@ class CAstroNow(object):
 			moon_azimuth = moon.az
 			moon_compass = self.ConvertAzimuthToCompassDirection(moon_azimuth)
 			moon_constellation = ephem.constellation(moon)[1]
-	    
-			if moon_altitude <= 0:
-				moon_visible = False
-			else:
-				moon_visible = True
+
+			moon_visible = True if moon_altitude > 0 else False
 
 			rise_time_ut = self.myObserver.next_rising(moon)
 			rise_time_local = str(ephem.localtime(rise_time_ut))
@@ -262,10 +259,9 @@ class CAstroNow(object):
 				planet_set_ut = self.myObserver.next_setting(p)
 				planet_rise_local = ephem.localtime(planet_rise_ut)
 				planet_set_local = ephem.localtime(planet_set_ut)
-				if planet_altitude > 0:
-					planet_visible = True
-				else:
-					planet_visible = False				
+
+				planet_visible = True if planet_altitude > 0 else False
+
 			else:
 				print planetName + " is not valid."
 
@@ -347,11 +343,8 @@ class CAstroNow(object):
 			star_azimuth = s.az
 			star_compass = self.ConvertAzimuthToCompassDirection(star_azimuth)
 			star_constellation = str(ephem.constellation(s)[1])
-			if star_altitude > 0:
-				star_visible = True
-			else:
-				star_visible = False
-			
+			star_visible = True if star_altitude > 0 else False
+
 			dictionaryData = {}
 			dictionaryData['Name'] = str(starName)
 			dictionaryData['RightAscension'] = str(star_rightascension)
@@ -406,15 +399,12 @@ class CAstroNow(object):
 			sun.compute(self.myObserver)
 
 			sun_altitude = sun.alt
-			if sun_altitude > 0:
-				sun_visible = True
-			else:
-				sun_visible = False
+			sun_visible = True if sun_altitude > 0 else False
 			sun_azimuth = sun.az
 			sun_compass = self.ConvertAzimuthToCompassDirection(sun_azimuth)
 			sun_constellation = ephem.constellation(sun)[1]
 
-	    		rise_time_ut = self.myObserver.next_rising(sun)
+			rise_time_ut = self.myObserver.next_rising(sun)
 			rise_time_local = str(ephem.localtime(rise_time_ut))
 
 			set_time_ut = self.myObserver.next_setting(sun)
