@@ -1,5 +1,5 @@
 
-def ConvertAzimuthToCompassDirection(azimuth):
+def AzimuthToCompassDirection(azimuth):
 	"""
 	Compass is divided into 16 segments, mapped to
 	 N, NNE, NE, NEE, E, SEE, SE, SSE, S, SSW, SW, SWW, W, NWW, NW, and NNW.
@@ -42,3 +42,13 @@ def ConvertAzimuthToCompassDirection(azimuth):
 		compassDirection = "North"
 
 	return compassDirection
+
+def DegreesToRadians(degrees):
+	OneDegreeInRadians = .01745200698
+	
+	return degrees * OneDegreeInRadians
+	
+def RadiansToDegrees(radians):
+	OneDegreeInRadians = .01745200698
+
+	return radians / OneDegreeInRadians
