@@ -73,7 +73,7 @@ class CAstroNow(object):
 			
 			moon_altitude = moon.alt
 			moon_azimuth = moon.az
-			moon_compass = AU.ConvertAzimuthToCompassDirection(moon_azimuth)
+			moon_compass = AU.AzimuthToCompassDirection(moon_azimuth)
 			moon_constellation = ephem.constellation(moon)[1]
 
 			moon_visible = True if moon_altitude > 0 else False
@@ -209,7 +209,7 @@ class CAstroNow(object):
 
 				planet_altitude = p.alt
 				planet_azimuth = p.az
-				planet_compass = AU.ConvertAzimuthToCompassDirection(planet_azimuth)
+				planet_compass = AU.AzimuthToCompassDirection(planet_azimuth)
 				planet_constellation = str(ephem.constellation(p)[1])
 				planet_rise_ut = self.myObserver.next_rising(p)
 				planet_set_ut = self.myObserver.next_setting(p)
@@ -297,7 +297,7 @@ class CAstroNow(object):
 			star_neverup = s.neverup  # never rises?				
 			star_altitude = s.alt
 			star_azimuth = s.az
-			star_compass = AU.ConvertAzimuthToCompassDirection(star_azimuth)
+			star_compass = AU.AzimuthToCompassDirection(star_azimuth)
 			star_constellation = str(ephem.constellation(s)[1])
 			star_visible = True if star_altitude > 0 else False
 
@@ -357,7 +357,7 @@ class CAstroNow(object):
 			sun_altitude = sun.alt
 			sun_visible = True if sun_altitude > 0 else False
 			sun_azimuth = sun.az
-			sun_compass = AU.ConvertAzimuthToCompassDirection(sun_azimuth)
+			sun_compass = AU.AzimuthToCompassDirection(sun_azimuth)
 			sun_constellation = ephem.constellation(sun)[1]
 
 			rise_time_ut = self.myObserver.next_rising(sun)
@@ -390,19 +390,32 @@ class CAstroNow(object):
 			print ""
 
 	def GetTwilight(self):
-		"""
-		Calculate twilight times.
-		
-		Currently NOT working!
-		"""
 		try:
-			twilightObserver = ephem.Observer()
-			twilightObserver.lat, twilightObserver.lon = str(self.latitude), str(self.longitude)
-			twilightObserver.horizon = -6
+			sun = ephem.Sun()
+			sun.compute(self.myObserver)
 			
-			return twilightObserver.previous_rising(ephem.Sun(), use_center=True)
+			twilight_description = "None"
+			
+			sun_altitude_degrees = AU.RadiansToDegrees(sun.alt)
+			
+			if sun_altitude_degrees > 0:
+				twilight_description = "Daylight"
+			
+			if sun_altitude_degrees <= 0 and sun_altitude_degrees >= -6:
+				twilight_description = "Civil"
+			
+			if sun_altitude_degrees < -6 and sun_altitude_degrees >= -12:
+				twilight_description = "Nautical"
+
+			if sun_altitude_degrees < -12 and sun_altitude_degrees >= -18:
+				twilight_description = "Astronomical"
+			
+			if sun_altitude_degrees < -18:
+				twilight_description = "Night"
+			
+			return twilight_description
 		
 		except Exception as ex:
 			print str(ex)
-			return 0
+			return ""
 
