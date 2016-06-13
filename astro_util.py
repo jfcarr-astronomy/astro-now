@@ -1,8 +1,13 @@
+import math
+
+OneDegreeInRadians = math.pi / 180
 
 def AzimuthToCompassDirection(azimuth):
 	"""
 	Compass is divided into 16 segments, mapped to
 	 N, NNE, NE, NEE, E, SEE, SE, SSE, S, SSW, SW, SWW, W, NWW, NW, and NNW.
+	 
+	IMPORTANT:  input azimuth must be in radians, NOT degrees.
 	"""
 	compassDirection = ""
 
@@ -44,11 +49,11 @@ def AzimuthToCompassDirection(azimuth):
 	return compassDirection
 
 def DegreesToRadians(degrees):
-	OneDegreeInRadians = .01745200698
+	global OneDegreeInRadians
 	
 	return degrees * OneDegreeInRadians
 	
 def RadiansToDegrees(radians):
-	OneDegreeInRadians = .01745200698
+	global OneDegreeInRadians
 
 	return radians / OneDegreeInRadians
