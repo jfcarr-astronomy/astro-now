@@ -30,6 +30,10 @@ def DisplayPlanet(planetName):
 	textOutput.delete(1.0, END)
 	textOutput.insert(END, myAstro.GetPlanetInfo(planetName))
 
+def DisplayTwilight():
+	textOutput.delete(1.0, END)
+	textOutput.insert(END, myAstro.GetTwilight())
+
 
 if __name__ == '__main__':
 	root = Tk()
@@ -43,6 +47,7 @@ if __name__ == '__main__':
 	menubar.add_command(label="Mars", command= lambda: DisplayPlanet("Mars"))
 	menubar.add_command(label="Jupiter", command= lambda: DisplayPlanet("Jupiter"))
 	menubar.add_command(label="Saturn", command= lambda: DisplayPlanet("Saturn"))
+	menubar.add_command(label="Twilight", command=DisplayTwilight)
 	menubar.add_command(label="Exit", command=root.quit)
 	
 	root.config(menu=menubar)
