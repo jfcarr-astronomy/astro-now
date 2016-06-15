@@ -4,19 +4,8 @@ import astro_now_lib as AL
 import unittest
 
 def CheckTwilightValue(inputString):
-	isValid = False
+	isValid = True if inputString in ["Daylight", "Civil", "Nautical", "Astronomical", "Night"] else False
 	
-	if inputString == "Daylight":
-		isValid = True
-	if inputString == "Civil":
-		isValid = True
-	if inputString == "Nautical":
-		isValid = True
-	if inputString == "Astronomical":
-		isValid = True
-	if inputString == "Night":
-		isValid = True
-
 	return isValid
 
 class AstroTest(unittest.TestCase):
