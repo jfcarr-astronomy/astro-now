@@ -2,7 +2,7 @@
 
 astro-now is a Python library that exports astronomical viewing info in json format, either for the current date and time (default), or a specific date and time that you request.
 
-astro-now depends on the pyephem library, so you'll need to install it first:  <http://rhodesmill.org/pyephem/>
+astro-now depends on the pyephem library, so you'll need to install it first:  <https://github.com/brandon-rhodes/pyephem>
 
 The CAstroNow class, in astro_now_lib.py, is instanciated with position, date/time, and other optional info.  Then, you call the method on the object to get the information you want.
 
