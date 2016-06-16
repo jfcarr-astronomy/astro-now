@@ -3,11 +3,6 @@
 import astro_util as AU
 import unittest
 
-def CheckTwilightValue(inputString):
-	isValid = True if inputString in ["Daylight", "Civil", "Nautical", "Astronomical", "Night"] else False
-	
-	return isValid
-
 class AstroTest(unittest.TestCase):
 	def test_Azimuth_North(self):
 		self.assertEqual(AU.AzimuthToCompassDirection(AU.DegreesToRadians(0)), "North")
