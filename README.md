@@ -35,4 +35,4 @@ For example, to get moon info for the current date and time for Dayton, Ohio, wi
 		"Phase": "1.45557224751"
 	}
 
-There are several methods for specific fragments of info, e.g., GetMoonLocation(), GetPlanetInfo(planetName), GetSunLocation(), etc.  If you want to get ALL of the information in one call, you can use GetCurrentConditions().
+There are several methods for specific fragments of info, e.g., GetMoonInfo(), GetPlanetInfo(planetName), GetTwilight(), etc.  If you want to get ALL of the information in one call, you can use GetCurrentConditions().
