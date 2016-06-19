@@ -34,6 +34,10 @@ def DisplayTwilight():
 	textOutput.delete(1.0, END)
 	textOutput.insert(END, myAstro.GetTwilight())
 
+def DisplayKIC():
+	textOutput.delete(1.0, END)
+	textOutput.insert(END, myAstro.GetObjectInfo("KIC 8462852","20:6:15","44:27:25",11))
+
 
 if __name__ == '__main__':
 	root = Tk()
@@ -48,6 +52,7 @@ if __name__ == '__main__':
 	menubar.add_command(label="Jupiter", command= lambda: DisplayPlanet("Jupiter"))
 	menubar.add_command(label="Saturn", command= lambda: DisplayPlanet("Saturn"))
 	menubar.add_command(label="Twilight", command=DisplayTwilight)
+	menubar.add_command(label="KIC", command=DisplayKIC)
 	menubar.add_command(label="Exit", command=root.quit)
 	
 	root.config(menu=menubar)

@@ -155,6 +155,46 @@ class CAstroNow(object):
 			print str(ex)
 			return ""
 
+	def GetObjectInfo(self, objectName, rightAscension, declination, magnitude=0):
+		"""
+		Calculate local info for custom objects, given Right Ascension and Declination info.
+		
+		XEphem format for fixed object:
+		 "ObjectName,f,right_ascension,declination,magnitude"
+		   Right Ascension is given as hours:minutes:seconds
+		   Declination is given as degrees:minutes:seconds
+		Example:
+		 "KIC 8462852,f,20:6:15,44:27:25,11"
+		"""
+		
+		ephemeris = objectName + "," + "f" + "," + rightAscension + "," + declination + "," + str(magnitude)
+		
+		customObject = ephem.readdb(ephemeris)
+		customObject.compute(self.myObserver)
+		
+		object_altitude = customObject.alt
+		object_azimuth = customObject.az
+		object_compass = AU.AzimuthToCompassDirection(object_azimuth)
+		object_constellation = ephem.constellation(customObject)[1]
+		object_visible = True if object_altitude > 0 else False
+		object_magnitude = customObject.mag
+
+		dictionaryData = {}
+		dictionaryData['Name'] = objectName
+		dictionaryData['Altitude'] = str(object_altitude)
+		dictionaryData['IsVisible'] = object_visible
+		dictionaryData['Azimuth'] = str(object_azimuth)
+		dictionaryData['Compass'] = str(object_compass)
+		dictionaryData['InConstellation'] = object_constellation
+		dictionaryData['Magnitude'] = object_magnitude
+
+		if self.prettyprint == True:
+			json_string = json.dumps(dictionaryData, sort_keys=True, indent=4, separators=(',', ': '))
+		else:
+			json_string = json.dumps(dictionaryData, sort_keys=True, separators=(',', ': '))
+
+		return json_string
+
 	def GetPlanetInfo(self, planetName):
 		try:
 			IsReady = False
