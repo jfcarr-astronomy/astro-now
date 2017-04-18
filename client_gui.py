@@ -1,7 +1,7 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 
 import astro_now_lib as AL
-from Tkinter import *
+from tkinter import *
 
 # Dayton, Ohio
 testLatitude = '39.759'

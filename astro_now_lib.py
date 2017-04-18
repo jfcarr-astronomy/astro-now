@@ -118,11 +118,11 @@ class CAstroNow(object):
 			set_details += " " + str(minutes_until_set) + " minutes from now"
 						
 			next_rise_local = str(ephem.localtime(rise_time_ut))
-			if rise_details <> "":
+			if rise_details != "":
 				next_rise_local += " (" + rise_details + ")"
 
 			next_set_local = str(ephem.localtime(set_time_ut))
-			if set_details <> "":
+			if set_details != "":
 				next_set_local += " (" + set_details + ")"
 			
 			dictionaryData = {}
@@ -152,7 +152,7 @@ class CAstroNow(object):
 			return json_string
 			
 		except Exception as ex:
-			print str(ex)
+			print(str(ex))
 			return ""
 
 	def GetObjectInfo(self, objectName, rightAscension, declination, magnitude=0):
@@ -259,7 +259,7 @@ class CAstroNow(object):
 				planet_visible = True if planet_altitude > 0 else False
 
 			else:
-				print planetName + " is not valid."
+				print(planetName + " is not valid.")
 
 			dictionaryData = {}
 			dictionaryData['Name'] = str(planetName)
@@ -294,8 +294,8 @@ class CAstroNow(object):
 			return json_string
 		
 		except Exception as ex:
-			print str(ex)
-			print ""		
+			print(str(ex))
+			print("")
 
 	def GetPlanetsInfo(self, embedded=False):
 		json_string = \
@@ -362,7 +362,7 @@ class CAstroNow(object):
 			return json_string
 
 		except Exception as ex:
-			print str(ex)
+			print(str(ex))
 			return "{ }"
 
 	def GetStarsInfo(self, embedded=False):
@@ -426,8 +426,8 @@ class CAstroNow(object):
 			return json_string
 						
 		except Exception as ex:
-			print str(ex)
-			print ""
+			print(str(ex))
+			print("")
 
 	def GetTwilight(self):
 		try:
@@ -456,6 +456,6 @@ class CAstroNow(object):
 			return twilight_description
 		
 		except Exception as ex:
-			print str(ex)
-			return ""
+			print(str(ex))
+			return("")
 
