@@ -2,6 +2,8 @@
 
 **2017.04.30 - IMPORTANT UPDATE** I love [PyEphem](https://github.com/brandon-rhodes/pyephem), and it works very well for me, but the [AstroPy](https://github.com/astropy/astropy) library seems to be the "go to" for astronomy calculations in Python.  Therefore, I'm in the process of refactoring astro-now to use it instead.  This repository will receive no updates going forward, and will eventually be replaced with a new repository once the refactoring job is complete.  Thanks!
 
+<hr>
+
 astro-now is a Python 3 library that exports astronomical viewing info in json format, either for the current date and time (default), or a specific date and time that you request.
 
 astro-now depends on the pyephem library, so you'll need to install it first:  **pip3 install pyephem**
