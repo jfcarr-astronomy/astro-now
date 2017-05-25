@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
 import astro_util as AU
+import sys
 import unittest
 
 class AstroTest(unittest.TestCase):
@@ -16,5 +17,8 @@ class AstroTest(unittest.TestCase):
 	def test_Azimuth_West(self):
 		self.assertEqual(AU.AzimuthToCompassDirection(AU.DegreesToRadians(270)), "West")
 
-if __name__ == '__main__':
+def main(args):
 	unittest.main()
+
+if __name__ == '__main__':
+	sys.exit(main(sys.argv))

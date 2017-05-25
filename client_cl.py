@@ -1,8 +1,9 @@
 #!/usr/bin/python3
 
 import astro_now_lib as AL
+import sys
 
-if __name__ == '__main__':
+def main(args):
 	# Dayton, Ohio
 	testLatitude = '39.759'
 	testLongitude = '-84.192'
@@ -19,3 +20,8 @@ if __name__ == '__main__':
 	#print(myAstro.GetSunInfo())
 	#print(myAstro.GetTwilight())
 	print(myAstro.GetObjectInfo("KIC 8462852","20:6:15","44:27:25",11))
+
+	return 0
+
+if __name__ == '__main__':
+	sys.exit(main(sys.argv))

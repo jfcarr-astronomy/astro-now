@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
 import astro_now_lib as AL
+import sys
 import unittest
 
 def CheckTwilightValue(inputString):
@@ -19,5 +20,8 @@ class AstroTest(unittest.TestCase):
 	def test_Twilight(self):
 		self.assertTrue(CheckTwilightValue(self.myAstro.GetTwilight()))
 
-if __name__ == '__main__':
+def main(args):
 	unittest.main()
+
+if __name__ == '__main__':
+	sys.exit(main(sys.argv))
