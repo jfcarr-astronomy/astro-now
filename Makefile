@@ -3,5 +3,5 @@ default:
 	@echo " clean"
 
 clean:
-	-rm -f server *.pyc
+	-rm -f *.pyc
 	-rm -rf __pycache__
