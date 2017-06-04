@@ -4,8 +4,10 @@ astro-now is a Python 3 library that exports astronomical viewing info in json f
 
 astro-now depends on the following libraries, so install them first:
 
-* pyephem:  **pip3 install pyephem**
-* geocoder:  **pip3 install geocoder**
+Library Name | Installation Command
+------------ | --------------------
+pyephem | ``pip3 install pyephem``
+geocoder | ``pip3 install geocoder``
 
 The CAstroNow class, in astro_now_lib.py, is instanciated with position, date/time, and other optional info.  Then, you call the method on the object to get the information you want.
 
