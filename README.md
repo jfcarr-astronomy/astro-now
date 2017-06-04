@@ -2,16 +2,21 @@
 
 astro-now is a Python 3 library that exports astronomical viewing info in json format, either for the current date and time (default), or a specific date and time that you request.
 
-astro-now depends on the pyephem library, so you'll need to install it first:  **pip3 install pyephem**
+astro-now depends on the following libraries, so install them first:
+
+* pyephem:  **pip3 install pyephem**
+* geocoder:  **pip3 install geocoder**
 
 The CAstroNow class, in astro_now_lib.py, is instanciated with position, date/time, and other optional info.  Then, you call the method on the object to get the information you want.
 
 For example, to get moon info for the current date and time for Dayton, Ohio, with nicely formatted json, you would do this:
 
 	import astro_now_lib
-	testLatitude = '39.759'
-	testLongitude = '-84.192'
-	myAstro = astro_now_lib.CAstroNow(lat=testLatitude, long=testLongitude, prettyprint=True)
+	import geocode
+	myGeocoder = geocode.CGeocode()
+	myCoordinates = myGeocoder.GetCoordinatesForCity('Dayton, OH')
+
+	myAstro = astro_now_lib.CAstroNow(lat=str(myCoordinates['Latitude']), long=str(myCoordinates['Longitude']), prettyprint=True)
 	print(myAstro.GetMoonInfo())
 
 ...which will produce output similar to the following:

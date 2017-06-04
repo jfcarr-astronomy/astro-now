@@ -1,15 +1,15 @@
 #!/usr/bin/python3
 
 import astro_now_lib as AL
+import geocode as GC
 import sys
 
 def main(args):
-	# Dayton, Ohio
-	testLatitude = '39.759'
-	testLongitude = '-84.192'
+	myGeocoder = GC.CGeocode()
+	myCoordinates = myGeocoder.GetCoordinatesForCity('Dayton, OH')
 	
-	myAstro = AL.CAstroNow(lat=testLatitude, long=testLongitude, prettyprint=True)
-	#myAstro = AL.CAstroNow(lat=testLatitude, long=testLongitude, prettyprint=True, calcdate="2016/06/12 23:35:00")
+	myAstro = AL.CAstroNow(lat=str(myCoordinates['Latitude']), long=str(myCoordinates['Longitude']), prettyprint=True)
+	#myAstro = AL.CAstroNow(lat=str(myCoordinates['Latitude']), long=str(myCoordinates['Longitude']), prettyprint=True, calcdate="2016/06/12 23:35:00")
 
 	#print(myAstro.GetCurrentConditions())
 	#print(myAstro.GetPlanetsInfo())
