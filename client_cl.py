@@ -11,6 +11,7 @@ def main(args):
 	try:
 
 		parser.add_argument("-c", "--current", help="Info for all known objects.", action="store_true")
+		parser.add_argument("-co", "--coordinates", type=str, help="Location, in the form 'Latitude,Longitude', e.g., '39.764200,-84.188201'")
 		parser.add_argument("-d", "--date", type=str, help="Date and time, in the form 'yyyy/mm/dd hh:mm:ss', e.g., '2017/06/11 22:15:00'.  If omitted, current date/time is used.")
 		parser.add_argument("-l", "--location", type=str, help="Location, in the form 'City, State', e.g., 'Dayton, OH'")
 		parser.add_argument("-m", "--moon", help="Moon info.", action="store_true")
@@ -27,9 +28,16 @@ def main(args):
 	if args.location:
 		myGeocoder = GC.CGeocode()
 		myCoordinates = myGeocoder.GetCoordinatesForCity(args.location)
+		if myCoordinates['Latitude'] == None:
+			print("Geocoder is unavailable.")
+			sys.exit(-1)
 	else:
-		print("Location is required.")
-		sys.exit(-1)
+		if args.coordinates:
+			coordinate_args = args.coordinates.split(',')
+			myCoordinates = {'Latitude': coordinate_args[0], 'Longitude': coordinate_args[1]}
+		else:
+			print("Location or Coordinates are required.")
+			sys.exit(-1)
 
 	if args.date:
 		myAstro = AL.CAstroNow(lat=str(myCoordinates['Latitude']), long=str(myCoordinates['Longitude']), prettyprint=True, calcdate=args.date)
