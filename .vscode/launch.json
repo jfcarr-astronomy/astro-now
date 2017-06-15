@@ -1,20 +1,25 @@
 {
-    "version": "0.2.0",
-    "configurations": [{
-        "name": "Python",
-        "type": "python",
-        "request": "launch",
-        "stopOnEntry": false,
-        "pythonPath": "/usr/bin/python3",
-        "program": "${file}",
-        "cwd": "${workspaceRoot}",
-        "env": {},
-        "envFile": "${workspaceRoot}/.env",
-        "debugOptions": [
-            "WaitOnAbnormalExit",
-            "WaitOnNormalExit",
-            "RedirectOutput"
-        ]
-    }],
-    "compounds": []
+	"version": "0.2.0",
+	"configurations": [
+		{
+			"name": "Python",
+			"type": "python",
+			"request": "launch",
+			"stopOnEntry": false,
+			"pythonPath": "/usr/bin/python3",
+			"program": "${file}",
+			"cwd": "${workspaceRoot}",
+			"env": {},
+			"envFile": "${workspaceRoot}/.env",
+			"debugOptions": [
+				"WaitOnAbnormalExit",
+				"WaitOnNormalExit",
+				"RedirectOutput"
+			],
+			"args": [
+				"-p mars"
+			]
+		}
+	],
+	"compounds": []
 }
