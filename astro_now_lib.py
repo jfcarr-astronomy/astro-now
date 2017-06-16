@@ -44,12 +44,10 @@ class CAstroNow(object):
 			Bright star info
 		"""
 		
-		sunAll = self.GetSunInfo()
-		sunAll = "\"sun\": " + sunAll
+		sunAll = self.GetSunInfo(embedded=True)
 		
-		moonAll = self.GetMoonInfo()
-		moonAll = "\"moon\": " + moonAll
-		
+		moonAll = self.GetMoonInfo(embedded=True)
+	
 		planetsAll = self.GetPlanetsInfo(embedded=True)
 		
 		starsAll = self.GetStarsInfo(embedded=True)
@@ -64,7 +62,7 @@ class CAstroNow(object):
 		
 		return json_string
 
-	def GetMoonInfo(self):
+	def GetMoonInfo(self, embedded=False):
 		try:
 			now = datetime.datetime.now()
 			
@@ -149,13 +147,24 @@ class CAstroNow(object):
 			else:
 				json_string = json.dumps(dictionaryData, sort_keys=True, separators=(',', ': '))
 			
+			json_string = "\"moon\": " + json_string
+
+			if embedded == False:
+				json_string = "{" + json_string + "}"
+
+				obj = json.loads(str(json_string))
+				if self.prettyprint == True:
+					json_string = json.dumps(obj, sort_keys=True, indent=4, separators=(',', ': '))
+				else:
+					json_string = json.dumps(obj, sort_keys=True, separators=(',', ': '))
+
 			return json_string
 			
 		except Exception as ex:
 			print(str(ex))
 			return ""
 
-	def GetObjectInfo(self, objectName, rightAscension, declination, magnitude=0):
+	def GetObjectInfo(self, objectName, rightAscension, declination, magnitude=0, embedded=False):
 		"""
 		Calculate local info for custom objects, given Right Ascension and Declination info.
 		
@@ -192,6 +201,17 @@ class CAstroNow(object):
 			json_string = json.dumps(dictionaryData, sort_keys=True, indent=4, separators=(',', ': '))
 		else:
 			json_string = json.dumps(dictionaryData, sort_keys=True, separators=(',', ': '))
+		
+		json_string = "\"objects\": [" + json_string + "]"
+
+		if embedded == False:
+			json_string = "{" + json_string + "}"
+
+			obj = json.loads(str(json_string))
+			if self.prettyprint == True:
+				json_string = json.dumps(obj, sort_keys=True, indent=4, separators=(',', ': '))
+			else:
+				json_string = json.dumps(obj, sort_keys=True, separators=(',', ': '))
 
 		return json_string
 
@@ -297,19 +317,26 @@ class CAstroNow(object):
 			print(str(ex))
 			print("")
 
-	def GetPlanetsInfo(self, embedded=False):
-		json_string = \
-			"\"planets\": [" + \
-			self.GetPlanetInfo("Mercury") + "," + \
-			self.GetPlanetInfo("Venus") + "," + \
-			self.GetPlanetInfo("Mars") + "," + \
-			self.GetPlanetInfo("Jupiter") + "," + \
-			self.GetPlanetInfo("Saturn") + "," + \
-			self.GetPlanetInfo("Uranus") + "," + \
-			self.GetPlanetInfo("Neptune") + "," + \
-			self.GetPlanetInfo("Pluto") + \
-			"]"
-		
+	def GetPlanetsInfo(self, planetName="", embedded=False):
+		if planetName == "":
+			json_string = \
+				"\"planets\": [" + \
+				self.GetPlanetInfo("Mercury") + "," + \
+				self.GetPlanetInfo("Venus") + "," + \
+				self.GetPlanetInfo("Mars") + "," + \
+				self.GetPlanetInfo("Jupiter") + "," + \
+				self.GetPlanetInfo("Saturn") + "," + \
+				self.GetPlanetInfo("Uranus") + "," + \
+				self.GetPlanetInfo("Neptune") + "," + \
+				self.GetPlanetInfo("Pluto") + \
+				"]"
+		else:
+			json_string = \
+				"\"planets\": [" + \
+				self.GetPlanetInfo(planetName) + \
+				"]"
+			
+
 		if embedded == False:
 			json_string = \
 				"{" + \
@@ -365,16 +392,19 @@ class CAstroNow(object):
 			print(str(ex))
 			return "{ }"
 
-	def GetStarsInfo(self, embedded=False):
+	def GetStarsInfo(self, starName="", embedded=False):
 		json_string = ""
 		first_pass = True
-		
-		for starname in self.bright_stars:
-			if first_pass == True:
-				json_string = json_string + self.GetStarInfo(starname)
-				first_pass = False
-			else:
-				json_string = json_string + "," + self.GetStarInfo(starname)
+
+		if starName == "":		
+			for starname in self.bright_stars:
+				if first_pass == True:
+					json_string = json_string + self.GetStarInfo(starname)
+					first_pass = False
+				else:
+					json_string = json_string + "," + self.GetStarInfo(starname)
+		else:
+			json_string = self.GetStarInfo(starName)
 
 		json_string = "\"stars\": [" + json_string + "]"
 
@@ -389,7 +419,7 @@ class CAstroNow(object):
 		
 		return json_string		
 
-	def GetSunInfo(self):
+	def GetSunInfo(self, embedded=False):
 		try:
 			sun = ephem.Sun()
 			sun.compute(self.myObserver)
@@ -417,14 +447,25 @@ class CAstroNow(object):
 			dictionaryData['NextRiseLocal'] = str(rise_time_local)
 			dictionaryData['NextSetUT'] = str(set_time_ut)
 			dictionaryData['NextSetLocal'] = str(set_time_local)
-		
+
 			if self.prettyprint == True:
 				json_string = json.dumps(dictionaryData, sort_keys=True, indent=4, separators=(',', ': '))
 			else:
 				json_string = json.dumps(dictionaryData, sort_keys=True, separators=(',', ': '))
 			
+			json_string = "\"sun\": " + json_string
+
+			if embedded == False:
+				json_string = "{" + json_string + "}"
+
+				obj = json.loads(str(json_string))
+				if self.prettyprint == True:
+					json_string = json.dumps(obj, sort_keys=True, indent=4, separators=(',', ': '))
+				else:
+					json_string = json.dumps(obj, sort_keys=True, separators=(',', ': '))
+
 			return json_string
-						
+
 		except Exception as ex:
 			print(str(ex))
 			print("")
