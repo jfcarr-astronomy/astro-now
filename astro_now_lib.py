@@ -80,8 +80,10 @@ class CAstroNow(object):
 		planetsAll = self.GetPlanetsInfo(embedded=True)
 		
 		starsAll = self.GetStarsInfo(embedded=True)
+
+		twilightAll = self.GetTwilight(embedded=True)
 		
-		allInfo = "{" + observerAll + "," + sunAll + "," + moonAll + "," + planetsAll + "," + starsAll + "}"
+		allInfo = "{" + observerAll + "," + sunAll + "," + moonAll + "," + planetsAll + "," + starsAll + "," + twilightAll + "}"
 		
 		obj = json.loads(str(allInfo))
 		if self.prettyprint == True:
@@ -496,7 +498,7 @@ class CAstroNow(object):
 			print(str(ex))
 			print("")
 
-	def GetTwilight(self):
+	def GetTwilight(self, embedded=False):
 		try:
 			sun = ephem.Sun()
 			sun.compute(self.myObserver)
@@ -520,8 +522,27 @@ class CAstroNow(object):
 			if sun_altitude_degrees < -18:
 				twilight_description = "Night"
 			
-			return twilight_description
-		
+			dictionaryData = {}
+			dictionaryData['Description'] = twilight_description
+
+			if self.prettyprint == True:
+				json_string = json.dumps(dictionaryData, sort_keys=True, indent=4, separators=(',', ': '))
+			else:
+				json_string = json.dumps(dictionaryData, sort_keys=True, separators=(',', ': '))
+			
+			json_string = "\"twilight\": " + json_string
+
+			if embedded == False:
+				json_string = "{" + self.GetObserverInfo(embedded=True) + "," + json_string + "}"
+
+				obj = json.loads(str(json_string))
+				if self.prettyprint == True:
+					json_string = json.dumps(obj, sort_keys=True, indent=4, separators=(',', ': '))
+				else:
+					json_string = json.dumps(obj, sort_keys=True, separators=(',', ': '))
+
+			return json_string
+
 		except Exception as ex:
 			print(str(ex))
 			return("")

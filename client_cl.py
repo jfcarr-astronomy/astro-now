@@ -71,7 +71,7 @@ def main(args):
 		print(myAstro.GetSunInfo())
 
 	if args.twilight:
-		print('Twilight state: ' + myAstro.GetTwilight())
+		print(myAstro.GetTwilight())
 
 	if args.object:
 		object_args = args.object.split(',')
