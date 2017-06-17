@@ -33,17 +33,46 @@ class CAstroNow(object):
 		current_diff = current_ut - ephem.date(current_local)
 		use_date = ephem.date(ephem.date(calcdate) + ephem.date(current_diff))
 		
+		self.LocalCalcDate = ephem.date(calcdate)
 		self.myObserver.date = use_date
+
+	def GetObserverInfo(self, embedded=False):
+		try:
+			dictionaryData = {}
+			dictionaryData['Latitude'] = str(self.myObserver.lat)
+			dictionaryData['Longitude'] = str(self.myObserver.lon)
+			dictionaryData['ObservationDateUT'] = str(self.myObserver.date)
+			dictionaryData['ObservationDateLocal'] = str(self.LocalCalcDate)
+
+			if self.prettyprint == True:
+				json_string = json.dumps(dictionaryData, sort_keys=True, indent=4, separators=(',', ': '))
+			else:
+				json_string = json.dumps(dictionaryData, sort_keys=True, separators=(',', ': '))
+			
+			json_string = "\"observer\": " + json_string
+
+			if embedded == False:
+				json_string = "{" + json_string + "}"
+
+				obj = json.loads(str(json_string))
+				if self.prettyprint == True:
+					json_string = json.dumps(obj, sort_keys=True, indent=4, separators=(',', ': '))
+				else:
+					json_string = json.dumps(obj, sort_keys=True, separators=(',', ': '))
+
+			return json_string
+
+		except Exception as ex:
+			print(str(ex))
+			return ""
 
 	def GetCurrentConditions(self):
 		"""
-		Full set of current condition information:
-			Sun info
-			Moon info
-			Planet info
-			Bright star info
+		Full set of current condition information: sun info, moon info, planet info, and bright star info
 		"""
 		
+		observerAll = self.GetObserverInfo(embedded=True)
+
 		sunAll = self.GetSunInfo(embedded=True)
 		
 		moonAll = self.GetMoonInfo(embedded=True)
@@ -52,7 +81,7 @@ class CAstroNow(object):
 		
 		starsAll = self.GetStarsInfo(embedded=True)
 		
-		allInfo = "{" + sunAll + "," + moonAll + "," + planetsAll + "," + starsAll + "}"
+		allInfo = "{" + observerAll + "," + sunAll + "," + moonAll + "," + planetsAll + "," + starsAll + "}"
 		
 		obj = json.loads(str(allInfo))
 		if self.prettyprint == True:
@@ -150,7 +179,7 @@ class CAstroNow(object):
 			json_string = "\"moon\": " + json_string
 
 			if embedded == False:
-				json_string = "{" + json_string + "}"
+				json_string = "{" + self.GetObserverInfo(embedded=True) + "," + json_string + "}"
 
 				obj = json.loads(str(json_string))
 				if self.prettyprint == True:
@@ -338,10 +367,7 @@ class CAstroNow(object):
 			
 
 		if embedded == False:
-			json_string = \
-				"{" + \
-				json_string + \
-				"}"
+			json_string = "{" + self.GetObserverInfo(embedded=True) + "," + json_string + "}"
 		
 			obj = json.loads(str(json_string))
 			if self.prettyprint == True:
@@ -409,7 +435,7 @@ class CAstroNow(object):
 		json_string = "\"stars\": [" + json_string + "]"
 
 		if embedded == False:
-			json_string = "{" + json_string + "}"
+			json_string = "{" + self.GetObserverInfo(embedded=True) + "," + json_string + "}"
 			
 			obj = json.loads(str(json_string))
 			if self.prettyprint == True:
@@ -456,7 +482,7 @@ class CAstroNow(object):
 			json_string = "\"sun\": " + json_string
 
 			if embedded == False:
-				json_string = "{" + json_string + "}"
+				json_string = "{" + self.GetObserverInfo(embedded=True) + "," + json_string + "}"
 
 				obj = json.loads(str(json_string))
 				if self.prettyprint == True:
@@ -499,4 +525,3 @@ class CAstroNow(object):
 		except Exception as ex:
 			print(str(ex))
 			return("")
-

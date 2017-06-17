@@ -15,6 +15,7 @@ def main(args):
 		parser.add_argument("-location", type=str, help="Location, in the form 'City, State', e.g., 'Dayton, OH'")
 		parser.add_argument("-moon", help="Moon info.", action="store_true")
 		parser.add_argument("-object", type=str, help="Info for a custom object, in the form 'name','right ascension','declination','magnitude', e.g., 'KIC8462852,20:6:15,44:27:25,11'")
+		parser.add_argument("-observer", help="Observer info.", action="store_true")
 		parser.add_argument("-planet", type=str, help="Info for individual planet.")
 		parser.add_argument("-planets", help="Info for all planets.", action="store_true")
 		parser.add_argument("-star", type=str, help="Info for individual star.")
@@ -56,6 +57,9 @@ def main(args):
 
 	if args.moon:
 		print(myAstro.GetMoonInfo())
+
+	if args.observer:
+		print(myAstro.GetObserverInfo())
 
 	if args.star:
 		print(myAstro.GetStarsInfo(args.star.strip()))
