@@ -2,6 +2,7 @@ import datetime
 import ephem
 import json
 import astro_util as AU
+from string import Template
 
 class CAstroNow(object):
 
@@ -35,6 +36,9 @@ class CAstroNow(object):
 		
 		self.LocalCalcDate = ephem.date(calcdate)
 		self.myObserver.date = use_date
+
+	def FormatNumber(self, inputNumber, places):
+		return '{number:.{places}f}'.format(places=places, number=inputNumber)
 
 	def DumpJSON(self, jsonObj):
 		"""
@@ -182,7 +186,7 @@ class CAstroNow(object):
 			dictionaryData['NextSetUT'] = str(set_time_ut)
 			dictionaryData['NextSetLocal'] = str(set_time_local)
 			dictionaryData['NextSetUntil'] = str(set_details)
-			dictionaryData['Phase'] = str(moon.phase)
+			dictionaryData['Phase'] = str(self.FormatNumber(moon.phase,4))
 			dictionaryData['Magnitude'] = str(moon.mag)
 			dictionaryData['NextFirstQuarter'] = str(ephem.next_first_quarter_moon(now))
 			dictionaryData['NextFull'] = str(ephem.next_full_moon(now))
