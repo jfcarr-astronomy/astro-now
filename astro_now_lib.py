@@ -175,6 +175,7 @@ class CAstroNow(object):
 			dictionaryData['Azimuth'] = str(moon_azimuth)
 			dictionaryData['Compass'] = str(moon_compass)
 			dictionaryData['InConstellation'] = moon_constellation
+			dictionaryData['NeverUp'] = str(moon.neverup)
 			dictionaryData['NextRiseUT'] = str(rise_time_ut)
 			dictionaryData['NextRiseLocal'] = str(rise_time_local)
 			dictionaryData['NextRiseUntil'] = str(rise_details)
@@ -182,11 +183,12 @@ class CAstroNow(object):
 			dictionaryData['NextSetLocal'] = str(set_time_local)
 			dictionaryData['NextSetUntil'] = str(set_details)
 			dictionaryData['Phase'] = str(moon.phase)
+			dictionaryData['Magnitude'] = str(moon.mag)
 			dictionaryData['NextFirstQuarter'] = str(ephem.next_first_quarter_moon(now))
 			dictionaryData['NextFull'] = str(ephem.next_full_moon(now))
 			dictionaryData['NextLastQuarter'] = str(ephem.next_last_quarter_moon(now))
 			dictionaryData['NextNew'] = str(ephem.next_new_moon(now))
-			
+		
 			json_string = "\"moon\": " + self.DumpJSON(dictionaryData)
 
 			if embedded == False:
