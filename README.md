@@ -61,7 +61,7 @@ There are several methods for specific fragments of info, e.g., GetMoonInfo(), G
 
 ## Usage - Command Line
 
-A command line tool, **client_cl.py**, is included that simplifies retrieving various types of information.  Issue the command **client_cl.py --help** to see all of the options available:
+A command line tool, **client\_cl.py**, is included that simplifies retrieving various types of information.  Issue the command **client\_cl.py --help** to see all of the options available:
 
 	usage: client_cl.py [-h] [-complete] [-coordinates COORDINATES] [-date DATE]
 						[-location LOCATION] [-moon] [-object OBJECT] [-observer]
@@ -123,4 +123,34 @@ Results:
 			"ObservationDateLocal": "2017/6/16 21:31:36",
 			"ObservationDateUT": "2017/6/17 01:31:37"
 		}
+	}
+
+Here's another example, using the command line tool to get information about the star "Vega":
+
+	./client_cl.py -location "Dayton, OH" -star Vega
+
+Results:
+
+	{
+		"observer": {
+			"Latitude": "39:45:32.2",
+			"Longitude": "-84:11:29.8",
+			"ObservationDateLocal": "2017/6/16 21:48:17",
+			"ObservationDateUT": "2017/6/17 01:48:17"
+		},
+		"stars": [
+			{
+				"Altitude": "36:35:41.6",
+				"Azimuth": "66:33:52.6",
+				"Circumpolar": false,
+				"Compass": "NorthEast-East",
+				"Declination": "38:46:59.0",
+				"Elongation": "-116:31:12.4",
+				"IsVisible": true,
+				"Magnitude": "0.03",
+				"Name": "Vega",
+				"NeverUp": false,
+				"RightAscension": "18:36:56.20"
+			}
+		]
 	}
