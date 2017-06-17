@@ -6,12 +6,12 @@ astro-now is a Python 3 library that exports astronomical viewing info in json f
 
 ## Dependencies
 
-astro-now depends on the following libraries, so install them first:
+astro-now depends on the following Python packages, so make sure they're installed:
 
-Library Name | Installation Command
------------- | --------------------
-pyephem | ``pip3 install pyephem``
-geocoder | ``pip3 install geocoder``
+* [pyephem](https://pypi.python.org/pypi/pyephem)
+* [geocoder](https://pypi.python.org/pypi/geocoder)
+
+(I recommend using "pip3 install <package_name>")
 
 ## Usage - Library
 
