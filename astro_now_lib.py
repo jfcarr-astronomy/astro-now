@@ -327,7 +327,7 @@ class CAstroNow(object):
 			dictionaryData['NeverUp'] = planet_neverup
 			dictionaryData['SunDistance'] = str(planet_sundistance)
 			dictionaryData['EarthDistance'] = str(planet_earthdistance)
-			dictionaryData['Phase'] = str(planet_phase)
+			dictionaryData['Phase'] = str(self.FormatNumber(planet_phase,4))
 			dictionaryData['Altitude'] = str(planet_altitude)
 			dictionaryData['IsVisible'] = planet_visible
 			dictionaryData['Azimuth'] = str(planet_azimuth)
