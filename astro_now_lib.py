@@ -36,7 +36,21 @@ class CAstroNow(object):
 		self.LocalCalcDate = ephem.date(calcdate)
 		self.myObserver.date = use_date
 
+	def DumpJSON(self, jsonObj):
+		"""
+		Given an object formatted as key-value pairs (e.g., Dictionary), format as JSON.
+		"""
+		if self.prettyprint == True:
+			json_string = json.dumps(jsonObj, sort_keys=True, indent=4, separators=(',', ': '))
+		else:
+			json_string = json.dumps(jsonObj, sort_keys=True, separators=(',', ': '))
+		
+		return json_string
+
 	def GetObserverInfo(self, embedded=False):
+		"""
+		Observer data: latitude, longitude, and observation date (local and UT).
+		"""
 		try:
 			dictionaryData = {}
 			dictionaryData['Latitude'] = str(self.myObserver.lat)
@@ -173,21 +187,13 @@ class CAstroNow(object):
 			dictionaryData['NextLastQuarter'] = str(ephem.next_last_quarter_moon(now))
 			dictionaryData['NextNew'] = str(ephem.next_new_moon(now))
 			
-			if self.prettyprint == True:
-				json_string = json.dumps(dictionaryData, sort_keys=True, indent=4, separators=(',', ': '))
-			else:
-				json_string = json.dumps(dictionaryData, sort_keys=True, separators=(',', ': '))
-			
-			json_string = "\"moon\": " + json_string
+			json_string = "\"moon\": " + self.DumpJSON(dictionaryData)
 
 			if embedded == False:
 				json_string = "{" + self.GetObserverInfo(embedded=True) + "," + json_string + "}"
 
 				obj = json.loads(str(json_string))
-				if self.prettyprint == True:
-					json_string = json.dumps(obj, sort_keys=True, indent=4, separators=(',', ': '))
-				else:
-					json_string = json.dumps(obj, sort_keys=True, separators=(',', ': '))
+				json_string = self.DumpJSON(obj)
 
 			return json_string
 			
@@ -228,21 +234,13 @@ class CAstroNow(object):
 		dictionaryData['InConstellation'] = object_constellation
 		dictionaryData['Magnitude'] = object_magnitude
 
-		if self.prettyprint == True:
-			json_string = json.dumps(dictionaryData, sort_keys=True, indent=4, separators=(',', ': '))
-		else:
-			json_string = json.dumps(dictionaryData, sort_keys=True, separators=(',', ': '))
-		
-		json_string = "\"objects\": [" + json_string + "]"
+		json_string = "\"objects\": [" + self.DumpJSON(dictionaryData) + "]"
 
 		if embedded == False:
 			json_string = "{" + json_string + "}"
 
 			obj = json.loads(str(json_string))
-			if self.prettyprint == True:
-				json_string = json.dumps(obj, sort_keys=True, indent=4, separators=(',', ': '))
-			else:
-				json_string = json.dumps(obj, sort_keys=True, separators=(',', ': '))
+			json_string = self.DumpJSON(obj)
 
 		return json_string
 
@@ -337,11 +335,8 @@ class CAstroNow(object):
 			#dictionaryData['NextSetUntil'] = str(set_details)
 			dictionaryData['CalcDateUT'] = str(self.myObserver.date)
 			
-			if self.prettyprint == True:
-				json_string = json.dumps(dictionaryData, sort_keys=True, indent=4, separators=(',', ': '))
-			else:
-				json_string = json.dumps(dictionaryData, sort_keys=True, separators=(',', ': '))
-				
+			json_string = self.DumpJSON(dictionaryData)
+
 			return json_string
 		
 		except Exception as ex:
@@ -366,16 +361,12 @@ class CAstroNow(object):
 				"\"planets\": [" + \
 				self.GetPlanetInfo(planetName) + \
 				"]"
-			
 
 		if embedded == False:
 			json_string = "{" + self.GetObserverInfo(embedded=True) + "," + json_string + "}"
 		
 			obj = json.loads(str(json_string))
-			if self.prettyprint == True:
-				json_string = json.dumps(obj, sort_keys=True, indent=4, separators=(',', ': '))
-			else:
-				json_string = json.dumps(obj, sort_keys=True, separators=(',', ': '))
+			json_string = self.DumpJSON(obj)
 		
 		return json_string		
 
@@ -409,12 +400,7 @@ class CAstroNow(object):
 			dictionaryData['Compass'] = str(star_compass)
 			dictionaryData['IsVisible'] = star_visible
 
-			if self.prettyprint == True:
-				json_string = json.dumps(dictionaryData, sort_keys=True, indent=4, separators=(',', ': '))
-			else:
-				json_string = json.dumps(dictionaryData, sort_keys=True, separators=(',', ': '))
-			
-			return json_string
+			return self.DumpJSON(dictionaryData)
 
 		except Exception as ex:
 			print(str(ex))
@@ -440,12 +426,9 @@ class CAstroNow(object):
 			json_string = "{" + self.GetObserverInfo(embedded=True) + "," + json_string + "}"
 			
 			obj = json.loads(str(json_string))
-			if self.prettyprint == True:
-				json_string = json.dumps(obj, sort_keys=True, indent=4, separators=(',', ': '))
-			else:
-				json_string = json.dumps(obj, sort_keys=True, separators=(',', ': '))
+			json_string = self.DumpJSON(obj)
 		
-		return json_string		
+		return json_string
 
 	def GetSunInfo(self, embedded=False):
 		try:
@@ -476,21 +459,13 @@ class CAstroNow(object):
 			dictionaryData['NextSetUT'] = str(set_time_ut)
 			dictionaryData['NextSetLocal'] = str(set_time_local)
 
-			if self.prettyprint == True:
-				json_string = json.dumps(dictionaryData, sort_keys=True, indent=4, separators=(',', ': '))
-			else:
-				json_string = json.dumps(dictionaryData, sort_keys=True, separators=(',', ': '))
-			
-			json_string = "\"sun\": " + json_string
+			json_string = "\"sun\": " + self.DumpJSON(dictionaryData)
 
 			if embedded == False:
 				json_string = "{" + self.GetObserverInfo(embedded=True) + "," + json_string + "}"
 
 				obj = json.loads(str(json_string))
-				if self.prettyprint == True:
-					json_string = json.dumps(obj, sort_keys=True, indent=4, separators=(',', ': '))
-				else:
-					json_string = json.dumps(obj, sort_keys=True, separators=(',', ': '))
+				json_string = self.DumpJSON(obj)
 
 			return json_string
 
@@ -525,21 +500,13 @@ class CAstroNow(object):
 			dictionaryData = {}
 			dictionaryData['Description'] = twilight_description
 
-			if self.prettyprint == True:
-				json_string = json.dumps(dictionaryData, sort_keys=True, indent=4, separators=(',', ': '))
-			else:
-				json_string = json.dumps(dictionaryData, sort_keys=True, separators=(',', ': '))
-			
-			json_string = "\"twilight\": " + json_string
+			json_string = "\"twilight\": " + self.DumpJSON(dictionaryData)
 
 			if embedded == False:
 				json_string = "{" + self.GetObserverInfo(embedded=True) + "," + json_string + "}"
 
 				obj = json.loads(str(json_string))
-				if self.prettyprint == True:
-					json_string = json.dumps(obj, sort_keys=True, indent=4, separators=(',', ': '))
-				else:
-					json_string = json.dumps(obj, sort_keys=True, separators=(',', ': '))
+				json_string = self.DumpJSON(obj)
 
 			return json_string
 
