@@ -51,16 +51,6 @@ class CAstroNow(object):
 		
 		return json_string
 
-	def ErrorJSON(self, errorMessage):
-		dictionaryData = {}
-		dictionaryData['Message'] = str(errorMessage)
-
-		json_string = "\"errors\": " + self.DumpJSON(dictionaryData)
-
-		print(json_string)
-
-		sys.exit(-1)
-
 	def GetObserverInfo(self, embedded=False):
 		"""
 		Observer data: latitude, longitude, and observation date (local and UT).
@@ -91,7 +81,7 @@ class CAstroNow(object):
 			return json_string
 
 		except Exception as ex:
-			self.ErrorJSON(str(ex))
+			AU.ErrorJSON(str(ex), prettyprint=self.prettyprint)
 			sys.exit(-1)
 
 	def GetCurrentConditions(self):
@@ -214,7 +204,7 @@ class CAstroNow(object):
 			return json_string
 			
 		except Exception as ex:
-			self.ErrorJSON(str(ex))
+			AU.ErrorJSON(str(ex), prettyprint=self.prettyprint)
 			sys.exit(-1)
 
 	def GetObjectInfo(self, objectName, rightAscension, declination, magnitude=0, embedded=False):
@@ -324,7 +314,7 @@ class CAstroNow(object):
 				planet_visible = True if planet_altitude > 0 else False
 
 			else:
-				self.ErrorJSON("Planet '" + planetName + "' is not valid.")
+				AU.ErrorJSON("Planet '" + planetName + "' is not valid.", prettyprint=self.prettyprint)
 
 			dictionaryData = {}
 			dictionaryData['Name'] = str(planetName)
@@ -356,7 +346,7 @@ class CAstroNow(object):
 			return json_string
 		
 		except Exception as ex:
-			self.ErrorJSON(str(ex))
+			AU.ErrorJSON(str(ex), prettyprint=self.prettyprint)
 			sys.exit(-1)
 
 	def GetPlanetsInfo(self, planetName="", embedded=False):
@@ -419,7 +409,7 @@ class CAstroNow(object):
 			return self.DumpJSON(dictionaryData)
 
 		except Exception as ex:
-			self.ErrorJSON(str(ex))
+			AU.ErrorJSON(str(ex), prettyprint=self.prettyprint)
 			sys.exit(-1)
 
 	def GetStarsInfo(self, starName="", embedded=False):
@@ -486,7 +476,7 @@ class CAstroNow(object):
 			return json_string
 
 		except Exception as ex:
-			self.ErrorJSON(str(ex))
+			AU.ErrorJSON(str(ex), prettyprint=self.prettyprint)
 			sys.exit(-1)
 
 	def GetTwilight(self, embedded=False):
@@ -527,5 +517,5 @@ class CAstroNow(object):
 			return json_string
 
 		except Exception as ex:
-			self.ErrorJSON(str(ex))
+			AU.ErrorJSON(str(ex), prettyprint=self.prettyprint)
 			sys.exit(-1)

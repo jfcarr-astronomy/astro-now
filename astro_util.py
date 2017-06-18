@@ -69,8 +69,14 @@ def ErrorJSON(errorMessage, prettyprint=False):
 	else:
 		json_string = json.dumps(dictionaryData, sort_keys=True, separators=(',', ': '))
 
+	json_string = "{ \"errors\": " + json_string + "}"
 
-	json_string = "\"errors\": " + json_string
+	obj = json.loads(str(json_string))
+
+	if prettyprint == True:
+		json_string = json.dumps(obj, sort_keys=True, indent=4, separators=(',', ': '))
+	else:
+		json_string = json.dumps(obj, sort_keys=True, separators=(',', ': '))
 
 	print(json_string)
 
