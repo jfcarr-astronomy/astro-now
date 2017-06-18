@@ -2,7 +2,7 @@ import datetime
 import ephem
 import json
 import astro_util as AU
-from string import Template
+import sys
 
 class CAstroNow(object):
 
@@ -51,6 +51,16 @@ class CAstroNow(object):
 		
 		return json_string
 
+	def ErrorJSON(self, errorMessage):
+		dictionaryData = {}
+		dictionaryData['Message'] = str(errorMessage)
+
+		json_string = "\"errors\": " + self.DumpJSON(dictionaryData)
+
+		print(json_string)
+
+		sys.exit(-1)
+
 	def GetObserverInfo(self, embedded=False):
 		"""
 		Observer data: latitude, longitude, and observation date (local and UT).
@@ -81,8 +91,8 @@ class CAstroNow(object):
 			return json_string
 
 		except Exception as ex:
-			print(str(ex))
-			return ""
+			self.ErrorJSON(str(ex))
+			sys.exit(-1)
 
 	def GetCurrentConditions(self):
 		"""
@@ -204,8 +214,8 @@ class CAstroNow(object):
 			return json_string
 			
 		except Exception as ex:
-			print(str(ex))
-			return ""
+			self.ErrorJSON(str(ex))
+			sys.exit(-1)
 
 	def GetObjectInfo(self, objectName, rightAscension, declination, magnitude=0, embedded=False):
 		"""
@@ -314,7 +324,7 @@ class CAstroNow(object):
 				planet_visible = True if planet_altitude > 0 else False
 
 			else:
-				print(planetName + " is not valid.")
+				self.ErrorJSON("Planet '" + planetName + "' is not valid.")
 
 			dictionaryData = {}
 			dictionaryData['Name'] = str(planetName)
@@ -346,8 +356,8 @@ class CAstroNow(object):
 			return json_string
 		
 		except Exception as ex:
-			print(str(ex))
-			print("")
+			self.ErrorJSON(str(ex))
+			sys.exit(-1)
 
 	def GetPlanetsInfo(self, planetName="", embedded=False):
 		if planetName == "":
@@ -380,7 +390,7 @@ class CAstroNow(object):
 		try:
 			s = ephem.star(starName)
 			s.compute(self.myObserver)
-            
+
 			star_rightascension = s._ra
 			star_declination = s._dec
 			star_magnitude = s.mag
@@ -409,8 +419,8 @@ class CAstroNow(object):
 			return self.DumpJSON(dictionaryData)
 
 		except Exception as ex:
-			print(str(ex))
-			return "{ }"
+			self.ErrorJSON(str(ex))
+			sys.exit(-1)
 
 	def GetStarsInfo(self, starName="", embedded=False):
 		json_string = ""
@@ -476,8 +486,8 @@ class CAstroNow(object):
 			return json_string
 
 		except Exception as ex:
-			print(str(ex))
-			print("")
+			self.ErrorJSON(str(ex))
+			sys.exit(-1)
 
 	def GetTwilight(self, embedded=False):
 		try:
@@ -517,5 +527,5 @@ class CAstroNow(object):
 			return json_string
 
 		except Exception as ex:
-			print(str(ex))
-			return("")
+			self.ErrorJSON(str(ex))
+			sys.exit(-1)

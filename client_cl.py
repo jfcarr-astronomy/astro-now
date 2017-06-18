@@ -2,10 +2,12 @@
 
 import argparse
 import astro_now_lib as AL
+import astro_util as AU
 import geocode as GC
 import sys
 
 def main(args):
+	prettyPrint = True
 	parser = argparse.ArgumentParser()
 
 	try:
@@ -24,27 +26,27 @@ def main(args):
 		parser.add_argument("-twilight", help="Twilight state.", action="store_true")
 		args = parser.parse_args()
 	except Exception as ex:
-		print(ex)
+		AU.ErrorJSON(str(ex), prettyprint=prettyPrint)
 		sys.exit(1)
 
 	if args.location:
 		myGeocoder = GC.CGeocode()
 		myCoordinates = myGeocoder.GetCoordinatesForCity(args.location)
 		if myCoordinates['Latitude'] == None:
-			print("Geocoder is unavailable.")
+			AU.ErrorJSON("Geocoder is unavailable.", prettyprint=prettyPrint)
 			sys.exit(-1)
 	else:
 		if args.coordinates:
 			coordinate_args = args.coordinates.split(',')
 			myCoordinates = {'Latitude': coordinate_args[0], 'Longitude': coordinate_args[1]}
 		else:
-			print("Location or Coordinates are required.")
+			AU.ErrorJSON("Location or Coordinates are required.", prettyprint=prettyPrint)
 			sys.exit(-1)
 
 	if args.date:
-		myAstro = AL.CAstroNow(lat=str(myCoordinates['Latitude']), long=str(myCoordinates['Longitude']), prettyprint=True, calcdate=args.date)
+		myAstro = AL.CAstroNow(lat=str(myCoordinates['Latitude']), long=str(myCoordinates['Longitude']), prettyprint=prettyPrint, calcdate=args.date)
 	else:
-		myAstro = AL.CAstroNow(lat=str(myCoordinates['Latitude']), long=str(myCoordinates['Longitude']), prettyprint=True)
+		myAstro = AL.CAstroNow(lat=str(myCoordinates['Latitude']), long=str(myCoordinates['Longitude']), prettyprint=prettyPrint)
 
 	if args.complete:
 		print(myAstro.GetCurrentConditions())

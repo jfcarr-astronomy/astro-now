@@ -1,4 +1,6 @@
 import math
+import json
+import sys
 
 OneDegreeInRadians = math.pi / 180
 
@@ -57,3 +59,19 @@ def RadiansToDegrees(radians):
 	global OneDegreeInRadians
 
 	return radians / OneDegreeInRadians
+
+def ErrorJSON(errorMessage, prettyprint=False):
+	dictionaryData = {}
+	dictionaryData['Message'] = str(errorMessage)
+
+	if prettyprint == True:
+		json_string = json.dumps(dictionaryData, sort_keys=True, indent=4, separators=(',', ': '))
+	else:
+		json_string = json.dumps(dictionaryData, sort_keys=True, separators=(',', ': '))
+
+
+	json_string = "\"errors\": " + json_string
+
+	print(json_string)
+
+	sys.exit(-1)
