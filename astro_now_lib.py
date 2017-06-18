@@ -37,8 +37,8 @@ class CAstroNow(object):
 		self.LocalCalcDate = ephem.date(calcdate)
 		self.myObserver.date = use_date
 
-	def FormatNumber(self, inputNumber, places):
-		return '{number:.{places}f}'.format(places=places, number=inputNumber)
+	def FormatNumber(self, inputNumber, decimalPlaces):
+		return '{number:.{places}f}'.format(places=decimalPlaces, number=inputNumber)
 
 	def DumpJSON(self, jsonObj):
 		"""
