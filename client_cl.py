@@ -7,7 +7,6 @@ import geocode as GC
 import sys
 
 def main(args):
-	prettyPrint = True
 	parser = argparse.ArgumentParser()
 
 	try:
@@ -20,33 +19,34 @@ def main(args):
 		parser.add_argument("-observer", help="Observer info.", action="store_true")
 		parser.add_argument("-planet", type=str, help="Info for individual planet.")
 		parser.add_argument("-planets", help="Info for all planets.", action="store_true")
+		parser.add_argument("-prettyprint", help="Display nicely formatted JSON.", action="store_true")
 		parser.add_argument("-star", type=str, help="Info for individual star.")
 		parser.add_argument("-stars", help="Info for 50 brightest stars.", action="store_true")
 		parser.add_argument("-sun", help="Sun info.", action="store_true")
 		parser.add_argument("-twilight", help="Twilight state.", action="store_true")
 		args = parser.parse_args()
 	except Exception as ex:
-		AU.ErrorJSON(str(ex), prettyprint=prettyPrint)
+		AU.ErrorJSON(str(ex))
 		sys.exit(1)
 
 	if args.location:
 		myGeocoder = GC.CGeocode()
 		myCoordinates = myGeocoder.GetCoordinatesForCity(args.location)
 		if myCoordinates['Latitude'] == None:
-			AU.ErrorJSON("Geocoder is unavailable.", prettyprint=prettyPrint)
+			AU.ErrorJSON("Geocoder is unavailable.", prettyprint=args.prettyprint)
 			sys.exit(-1)
 	else:
 		if args.coordinates:
 			coordinate_args = args.coordinates.split(',')
 			myCoordinates = {'Latitude': coordinate_args[0], 'Longitude': coordinate_args[1]}
 		else:
-			AU.ErrorJSON("Location or Coordinates are required.", prettyprint=prettyPrint)
+			AU.ErrorJSON("Location or Coordinates are required.", prettyprint=args.prettyprint)
 			sys.exit(-1)
 
 	if args.date:
-		myAstro = AL.CAstroNow(lat=str(myCoordinates['Latitude']), long=str(myCoordinates['Longitude']), prettyprint=prettyPrint, calcdate=args.date)
+		myAstro = AL.CAstroNow(lat=str(myCoordinates['Latitude']), long=str(myCoordinates['Longitude']), prettyprint=args.prettyprint, calcdate=args.date)
 	else:
-		myAstro = AL.CAstroNow(lat=str(myCoordinates['Latitude']), long=str(myCoordinates['Longitude']), prettyprint=prettyPrint)
+		myAstro = AL.CAstroNow(lat=str(myCoordinates['Latitude']), long=str(myCoordinates['Longitude']), prettyprint=args.prettyprint)
 
 	if args.complete:
 		print(myAstro.GetCurrentConditions())
