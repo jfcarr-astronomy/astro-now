@@ -126,10 +126,10 @@ class CAstroNow(object):
 			moon_visible = True if moon_altitude > 0 else False
 
 			rise_time_ut = self.myObserver.next_rising(moon)
-			rise_time_local = str(ephem.localtime(rise_time_ut))
-			
+			rise_time_local = ephem.Date(str(ephem.localtime(rise_time_ut)))
+
 			set_time_ut = self.myObserver.next_setting(moon)
-			set_time_local = str(ephem.localtime(set_time_ut))
+			set_time_local = ephem.Date(str(ephem.localtime(set_time_ut)))
 	    
 			altitude_string = str(moon_altitude)
 			rise_details = ""
@@ -143,12 +143,12 @@ class CAstroNow(object):
 				
 				if hours_until_rise > 0:
 					minutes_until_rise -= hours_until_rise * 60
-					rise_details += str(hours_until_rise)
+					rise_details += str(round(hours_until_rise,2))
 					if hours_until_rise > 1:
 						rise_details += " hours"
 					else:
 						rise_details += " hour"
-				rise_details += " " + str(minutes_until_rise) + " minutes from now"
+				# rise_details += " " + str(minutes_until_rise) + " minutes from now"
 			else:
 				altitude_string = altitude_string + " (Visible)"				
 			
@@ -157,12 +157,12 @@ class CAstroNow(object):
 			minutes_until_set = time_until_set.seconds / 60
 			if hours_until_set > 0:
 				minutes_until_set -= hours_until_set * 60
-				set_details += str(hours_until_set)
+				set_details += str(round(hours_until_set,2))
 				if hours_until_set > 1:
 					set_details += " hours"
 				else:
 					set_details += " hour"
-			set_details += " " + str(minutes_until_set) + " minutes from now"
+			# set_details += " " + str(minutes_until_set) + " minutes from now"
 						
 			next_rise_local = str(ephem.localtime(rise_time_ut))
 			if rise_details != "":
