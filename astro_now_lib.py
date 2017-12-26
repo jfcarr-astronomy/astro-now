@@ -405,6 +405,7 @@ class CAstroNow(object):
 			dictionaryData['Azimuth'] = str(star_azimuth)
 			dictionaryData['Compass'] = str(star_compass)
 			dictionaryData['IsVisible'] = star_visible
+			dictionaryData['InConstellation'] = star_constellation
 
 			return self.DumpJSON(dictionaryData)
 
