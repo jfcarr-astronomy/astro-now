@@ -1,4 +1,4 @@
-DBSRCURL = https://github.com/jfcarr-astronomy/HYG-Database-SQLite/blob/master/
+DBSRCURL = https://github.com/jfcarr-astronomy/HYG-Database-SQLite/raw/master/
 DBSRCNAME = hygdata.db
 DBTGTDIR = db/
 
