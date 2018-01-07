@@ -1,6 +1,6 @@
-DBSRCURL = https://github.com/jfcarr-astronomy/HYG-Database-SQLite/raw/master/
-DBSRCNAME = hygdata.db
-DBTGTDIR = db/
+DB_SRC_URL = https://github.com/jfcarr-astronomy/HYG-Database-SQLite/raw/master/
+DB_SRC_NAME = hygdata.db
+DB_TGT_DIR = db/
 
 default:
 	@echo "Targets:"
@@ -12,5 +12,5 @@ clean:
 	-rm -rf __pycache__
 
 getdb:
-	wget $(DBSRCURL)$(DBSRCNAME)
-	mv $(DBSRCNAME) $(DBTGTDIR)
+	wget $(DB_SRC_URL)$(DB_SRC_NAME)
+	mv $(DB_SRC_NAME) $(DB_TGT_DIR)
