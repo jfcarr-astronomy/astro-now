@@ -38,6 +38,9 @@ class CAstroNow(object):
 		self.myObserver.date = use_date
 
 	def FormatNumber(self, inputNumber, decimalPlaces):
+		'''
+		Format a number to a specific number of decimal places.
+		'''
 		return '{number:.{places}f}'.format(places=decimalPlaces, number=inputNumber)
 
 	def DumpJSON(self, jsonObj):
@@ -86,7 +89,7 @@ class CAstroNow(object):
 
 	def GetCurrentConditions(self):
 		"""
-		Full set of current condition information: sun info, moon info, planet info, and bright star info
+		Full set of current condition information: sun info, moon info, planet info, and bright star info.
 		"""
 		
 		observerAll = self.GetObserverInfo(embedded=True)
@@ -112,6 +115,9 @@ class CAstroNow(object):
 		return json_string
 
 	def GetMoonInfo(self, embedded=False):
+		'''
+		Get current info about Earth's moon.
+		'''
 		try:
 			now = datetime.datetime.now()
 			
@@ -251,6 +257,9 @@ class CAstroNow(object):
 		return json_string
 
 	def GetPlanetInfo(self, planetName):
+		'''
+		Get current info about one of the planets in the solar system.
+		'''
 		try:
 			IsReady = False
             
@@ -350,6 +359,9 @@ class CAstroNow(object):
 			sys.exit(-1)
 
 	def GetPlanetsInfo(self, planetName="", embedded=False):
+		'''
+		Get current info about all of the planets in the solar system.
+		'''
 		if planetName == "":
 			json_string = \
 				"\"planets\": [" + \
@@ -377,6 +389,9 @@ class CAstroNow(object):
 		return json_string		
 
 	def GetStarInfo(self, starName):
+		'''
+		Get current info about a stellar object.
+		'''
 		try:
 			s = ephem.star(starName)
 			s.compute(self.myObserver)
@@ -414,6 +429,9 @@ class CAstroNow(object):
 			sys.exit(-1)
 
 	def GetStarsInfo(self, starName="", embedded=False):
+		'''
+		Get current info about the 50 brightest stars.
+		'''
 		json_string = ""
 		first_pass = True
 
@@ -438,6 +456,9 @@ class CAstroNow(object):
 		return json_string
 
 	def GetSunInfo(self, embedded=False):
+		'''
+		Get current info about Sol (the sun).
+		'''
 		try:
 			sun = ephem.Sun()
 			sun.compute(self.myObserver)
@@ -481,6 +502,16 @@ class CAstroNow(object):
 			sys.exit(-1)
 
 	def GetTwilight(self, embedded=False):
+		'''
+		Get the current twilight state.
+
+		Possible values:
+			Daylight
+			Civil
+			Nautical
+			Astronomical
+			Night
+		'''
 		try:
 			sun = ephem.Sun()
 			sun.compute(self.myObserver)
